@@ -43,6 +43,7 @@ const AppStyle = styled.div`
   max-width: 1366px;
   min-height: 100vh;
   margin: 0px auto;
+  font-family: "Yatra One", cursive;
 `;
 
 function App() {
