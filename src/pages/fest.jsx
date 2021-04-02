@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+// import { NavLink } from "react-router-dom";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
@@ -6,12 +7,12 @@ import styled from "styled-components";
 
 const FestStyle = styled.section`
   padding: 25px;
+  color: #dfe4ea;
 `;
 const FestName = styled.nav`
   display: flex;
   /* background-color: green; */
   justify-content: space-between;
-  color: #dfe4ea;
   position: relative;
 `;
 const NameNav = styled.ul`
@@ -22,9 +23,31 @@ const NameNav = styled.ul`
   flex-wrap: wrap;
   background-image: url(${macabre});
   background-repeat: no-repeat;
-  background-size: calc(230px + 37vw) calc(260px + 10vw);
-  background-attachment: fixed;
+  background-size: calc(180px + 37vw) calc(200px + 10vw);
+  background-attachment: local;
+  padding-right: 20px;
 `;
+
+const Name = styled.li`
+  transform: skew(-30deg);
+  border-radius: 50% 0 50% 0;
+  height: 30px;
+  cursor: pointer;
+  background-color: #2f3542;
+  :hover {
+    border: solid 1px gray;
+  }
+
+  span {
+    :hover {
+      display: inline-block;
+      transform: skew(30deg);
+      min-width: 50px;
+      color: #b8860b;
+    }
+  }
+`;
+
 const NameLogo = styled.div`
   position: relative;
   img {
@@ -48,15 +71,16 @@ const NameLogo = styled.div`
 const FestCircles = styled.div`
   position: absolute;
   cursor: pointer;
-  bottom: -100px;
+  bottom: -130px;
   left: 50%;
 
   i {
     position: absolute;
-    top: 40%;
+    top: 43%;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
+    color: #b8860b;
   }
 
   :hover .circlebottom {
@@ -87,19 +111,63 @@ const FestCircleBottom = styled.div`
   background-color: #353b48;
   border-bottom: 2px solid #b8860b;
 `;
-const FestYear = styled.nav``;
+const FestYear = styled.nav`
+  padding-top: 50px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+`;
+
+const YearBlock = styled.div`
+  text-align: center;
+  font-size: calc(14px + 1vw);
+  height: 130px;
+  :nth-child(3) {
+    grid-row: span 3 / auto;
+  }
+  p {
+    width: 80px;
+    cursor: pointer;
+    :hover {
+      color: #b8860b;
+    }
+  }
+`;
+
 const FestList = styled.div``;
 
 const Fest = () => {
+  const [fest, setFest] = useState("Cannes");
+
+  const itemYear = [
+    "2020s",
+    "2010s",
+    null,
+    "2000s",
+    "1990s",
+    "1980s",
+    "1970s",
+    "1960s",
+    "1950s",
+    "1940s",
+  ].map((item, index) => (
+    <YearBlock key={index}>
+      <p>{item}</p>
+    </YearBlock>
+  ));
+
+  const itemName = ["Cannes", "Venice", "Berlin", "Sundance"].map(
+    (item, index) => (
+      <Name key={index} act={item === fest ? true : false}>
+        <span>{item}</span>
+      </Name>
+    )
+  );
+
   return (
     <FestStyle>
       <FestName>
-        <NameNav>
-          <li>Cannes</li>
-          <li>Venice</li>
-          <li>Berlin</li>
-          <li>Sundance</li>
-        </NameNav>
+        <NameNav>{itemName}</NameNav>
         <NameLogo>
           <img src={logo} alt="logo" />
         </NameLogo>
@@ -113,7 +181,7 @@ const Fest = () => {
           </FestCircleBottom>
         </FestCircles>
       </FestName>
-      <FestYear>year</FestYear>
+      <FestYear>{itemYear}</FestYear>
       <FestList>list</FestList>
     </FestStyle>
   );
