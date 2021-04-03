@@ -87,7 +87,7 @@ const FestCircles = styled.div`
 
   i {
     position: absolute;
-    top: 43%;
+    top: 36%;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
@@ -217,11 +217,19 @@ const Fest = () => {
         </NameLogo>
         <FestCircles>
           <FestCircleTop className="circletop">
-            <Images pic={`assets/${imagesLogo.top}`} top />
+            <Images
+              pic={`assets/${imagesLogo.top}`}
+              top
+              sun={fest === "Sundance" ? true : false}
+            />
           </FestCircleTop>
           <i className="fas fa-chevron-down fa-2x"></i>
           <FestCircleBottom className="circlebottom">
-            <Images pic={`assets/${imagesLogo.bottom}`} bottom />
+            <Images
+              pic={`assets/${imagesLogo.bottom}`}
+              bottom
+              sun={fest === "Sundance" ? true : false}
+            />
           </FestCircleBottom>
         </FestCircles>
       </FestName>
