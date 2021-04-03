@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-// import { getAxiosPosterLogo } from "../server/serverFest";
+import { getAxiosPosterLogo } from "../server/serverFest";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
+import Year from "../components/yearItem";
 import styled from "styled-components";
 
 const FestStyle = styled.section`
@@ -129,51 +130,16 @@ const FestYear = styled.nav`
   grid-gap: 10px;
 `;
 
-const YearBlock = styled.div`
-  text-align: center;
-  font-size: calc(14px + 1vw);
-  height: 130px;
-  :nth-child(3) {
-    grid-row: span 3 / auto;
-  }
-
-  p {
-    transform: skew(-30deg);
-    border-radius: 50% 0 50% 0;
-    box-shadow: 0px 0px 0px 1px #353b48;
-    transition: box-shadow 0.6s linear;
-    box-shadow: ${(props) => props.act && "0px 0px 0px 3px black"};
-    width: 80px;
-    cursor: pointer;
-    :hover {
-      transition: all ease-out 0.55s;
-      color: #b8860b;
-    }
-    ${(props) =>
-      props.act &&
-      `
-    transition: all ease-out 0.95s;
-    transform: skew(0deg);
-    min-width: 50px;
-    color: #b8860b;
-    padding: 5px;
-      
-  `}
-  }
-`;
-
 const FestList = styled.div``;
 
 const Fest = () => {
   const [fest, setFest] = useState("Cannes");
-  const [year, setYear] = useState("2020s");
+  const [year, setYear] = useState("2010s");
 
   const imagesLogo = {
     top: `${fest}Top.png`,
     bottom: `${fest}Bottom.png`,
   };
-
-  // console.log(imagesLogo.cannesTop);
 
   const itemYear = [
     "2020s",
@@ -187,13 +153,14 @@ const Fest = () => {
     "1950s",
     "1940s",
   ].map((item, index) => (
-    <YearBlock
+    <Year
       key={index}
       act={item === year ? true : false}
       onClick={() => setYear(item)}
+      index={index}
     >
       {item ? <p>{item}</p> : null}
-    </YearBlock>
+    </Year>
   ));
 
   const itemName = ["Cannes", "Venice", "Berlin", "Sundance"].map(

@@ -18,7 +18,7 @@ const cinemaUrl =
 
 export const getAxiosPosterLogo = async (url) => {
   const res = await axios(
-    `https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=cannes%20festival&page=${url}`,
+    `https://kinopoiskapiunofficial.tech/api/v2.1/films/${url}?append_to_response=`,
     {
       method: "GET",
       headers: {
@@ -26,5 +26,7 @@ export const getAxiosPosterLogo = async (url) => {
       },
     }
   );
-  return res.data;
+  return res;
 };
+
+console.log(getAxiosPosterLogo(400873));
