@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-// import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+// import { getAxiosPosterLogo } from "../server/serverFest";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
@@ -33,18 +33,29 @@ const Name = styled.li`
   border-radius: 50% 0 50% 0;
   height: 30px;
   cursor: pointer;
-  background-color: #2f3542;
-  :hover {
-    border: solid 1px gray;
-  }
+  box-shadow: 0px 0px 0px 1px #353b48;
+  transition: box-shadow 0.6s linear;
+  box-shadow: ${(props) => props.act && "0px 0px 0px 3px black"};
 
   span {
-    :hover {
-      display: inline-block;
-      transform: skew(30deg);
-      min-width: 50px;
-      color: #b8860b;
-    }
+    transition: all ease-out 0.35s;
+
+    ${(props) =>
+      props.act &&
+      `
+    display: inline-block;
+    transform: skew(30deg);
+    min-width: 50px;
+    color: #b8860b;
+    padding: 5px;
+      
+  `}
+  }
+  :hover span {
+    display: inline-block;
+    transform: skew(30deg);
+    min-width: 50px;
+    color: #b8860b;
   }
 `;
 
@@ -72,7 +83,7 @@ const FestCircles = styled.div`
   position: absolute;
   cursor: pointer;
   bottom: -130px;
-  left: 50%;
+  left: 55%;
 
   i {
     position: absolute;
@@ -125,12 +136,29 @@ const YearBlock = styled.div`
   :nth-child(3) {
     grid-row: span 3 / auto;
   }
+
   p {
+    transform: skew(-30deg);
+    border-radius: 50% 0 50% 0;
+    box-shadow: 0px 0px 0px 1px #353b48;
+    transition: box-shadow 0.6s linear;
+    box-shadow: ${(props) => props.act && "0px 0px 0px 3px black"};
     width: 80px;
     cursor: pointer;
     :hover {
+      transition: all ease-out 0.55s;
       color: #b8860b;
     }
+    ${(props) =>
+      props.act &&
+      `
+    transition: all ease-out 0.95s;
+    transform: skew(0deg);
+    min-width: 50px;
+    color: #b8860b;
+    padding: 5px;
+      
+  `}
   }
 `;
 
@@ -138,6 +166,14 @@ const FestList = styled.div``;
 
 const Fest = () => {
   const [fest, setFest] = useState("Cannes");
+  const [year, setYear] = useState("2020s");
+
+  const imagesLogo = {
+    top: `${fest}Top.png`,
+    bottom: `${fest}Bottom.png`,
+  };
+
+  // console.log(imagesLogo.cannesTop);
 
   const itemYear = [
     "2020s",
@@ -151,14 +187,22 @@ const Fest = () => {
     "1950s",
     "1940s",
   ].map((item, index) => (
-    <YearBlock key={index}>
-      <p>{item}</p>
+    <YearBlock
+      key={index}
+      act={item === year ? true : false}
+      onClick={() => setYear(item)}
+    >
+      {item ? <p>{item}</p> : null}
     </YearBlock>
   ));
 
   const itemName = ["Cannes", "Venice", "Berlin", "Sundance"].map(
     (item, index) => (
-      <Name key={index} act={item === fest ? true : false}>
+      <Name
+        key={index}
+        act={item === fest ? true : false}
+        onClick={() => setFest(item)}
+      >
         <span>{item}</span>
       </Name>
     )
@@ -173,11 +217,11 @@ const Fest = () => {
         </NameLogo>
         <FestCircles>
           <FestCircleTop className="circletop">
-            <Images pic={"assets/cannesTop.png"} top />
+            <Images pic={`assets/${imagesLogo.top}`} top />
           </FestCircleTop>
           <i className="fas fa-chevron-down fa-2x"></i>
           <FestCircleBottom className="circlebottom">
-            <Images pic={"assets/cannesBottom.png"} bottom />
+            <Images pic={`assets/${imagesLogo.bottom}`} bottom />
           </FestCircleBottom>
         </FestCircles>
       </FestName>
