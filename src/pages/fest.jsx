@@ -158,6 +158,7 @@ const Fest = () => {
       act={item === year ? true : false}
       onClick={() => setYear(item)}
       index={index}
+      fest={`${fest}PosterImages`}
     >
       {item ? <p>{item}</p> : null}
     </Year>
