@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { getAxiosPosterLogo } from "../server/serverFest";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
