@@ -3,7 +3,7 @@ import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
 import Year from "../components/yearItem";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const FestStyle = styled.section`
   padding: 25px;
@@ -79,12 +79,24 @@ const NameLogo = styled.div`
   }
 `;
 
+const rotate = keyframes`
+    0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const FestCircles = styled.div`
   position: absolute;
   cursor: pointer;
   bottom: -130px;
   left: 55%;
-
+  animation: ${rotate} 1s linear infinite;
+  animation-iteration-count: 1;
   i {
     position: absolute;
     top: 36%;
@@ -134,6 +146,9 @@ const FestList = styled.div``;
 const Fest = () => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
+  const [rotateCircle, setRotateCircle] = useState(false);
+
+  useEffect(() => {}, []);
 
   const imagesLogo = {
     top: `${fest}Top.png`,
@@ -141,25 +156,25 @@ const Fest = () => {
   };
 
   const itemYear = [
-    "2020s",
+    44,
     "2010s",
     null,
     "2000s",
     "1990s",
     "1980s",
-    "1970s",
-    "1960s",
-    "1950s",
-    "1940s",
+    fest === "Sundance" ? null : "1970s",
+    fest === "Sundance" ? null : "1960s",
+    fest === "Sundance" ? null : "1950s",
+    fest === "Berlin" || fest === "Sundance" ? null : "1940s",
   ].map((item, index) => (
     <Year
       key={index}
       act={item === year ? true : false}
-      onClick={() => setYear(item)}
+      onClick={() => setYear(typeof item === "string" ? item : year)}
       index={index}
       fest={`${fest}PosterImages`}
     >
-      {item ? <p>{item}</p> : null}
+      {typeof item === "string" ? <p>{item}</p> : item}
     </Year>
   ));
 

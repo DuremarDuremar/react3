@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import styled, { keyframes, css } from "styled-components";
 
 const array = {
   CannesPosterImages: [
@@ -52,6 +52,21 @@ const array = {
   ],
 };
 
+const fadeIn = keyframes`
+    0% {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const wrapAnimation = css`
+  animation: ${fadeIn} 1s linear infinite;
+`;
+
 const YearStyle = styled.div`
   text-align: center;
   font-size: calc(14px + 1vw);
@@ -62,6 +77,8 @@ const YearStyle = styled.div`
   background-position: 50% 35%;
   border-radius: 25px;
   cursor: pointer;
+  ${(props) => props.animation === true && wrapAnimation};
+  animation-iteration-count: 1;
   :nth-child(3) {
     grid-row: span 3 / auto;
   }
@@ -72,7 +89,6 @@ const YearStyle = styled.div`
     box-shadow: 0px 0px 0px 1px #353b48;
     transition: box-shadow 0.6s linear;
     box-shadow: ${(props) => props.act && "0px 0px 0px 1px black"};
-
     width: 80px;
 
     :hover {
@@ -95,9 +111,21 @@ const YearStyle = styled.div`
 `;
 
 const Year = (props) => {
-  console.log(array.CannesPosterImages[1]);
+  const [animation, setAnimation] = useState(false);
 
-  return <YearStyle {...props} />;
+  useEffect(() => {
+    setAnimation(true);
+  }, [props.fest]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (animation) {
+        setAnimation(false);
+      }
+    }, 1200);
+  }, [animation]);
+
+  return <YearStyle {...props} animation={animation} />;
 };
 
 export default Year;
