@@ -115,7 +115,6 @@ const YearStyle = styled.div`
 
 const Year = (props) => {
   const [animation, setAnimation] = useState(false);
-  const [list, setList] = useState(null);
 
   useEffect(() => {
     setAnimation(true);

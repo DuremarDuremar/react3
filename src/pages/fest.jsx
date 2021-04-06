@@ -3,6 +3,7 @@ import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
 import Year from "../components/yearItem";
+import List from "../components/list";
 import styled, { keyframes, css } from "styled-components";
 
 const FestStyle = styled.section`
@@ -148,6 +149,7 @@ const FestList = styled.div``;
 const Fest = () => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
+  const [list, setList] = useState(false);
   const [animation, setAnimation] = useState(false);
 
   useEffect(() => {
@@ -161,8 +163,6 @@ const Fest = () => {
       }
     }, 1000);
   }, [animation]);
-
-  console.log(animation);
 
   const imagesLogo = {
     top: `${fest}Top.png`,
@@ -197,7 +197,10 @@ const Fest = () => {
       <Name
         key={index}
         act={item === fest ? true : false}
-        onClick={() => setFest(item)}
+        onClick={() => {
+          setFest(item);
+          setList(false);
+        }}
       >
         <span>{item}</span>
       </Name>
@@ -219,7 +222,10 @@ const Fest = () => {
               sun={fest === "Sundance" ? true : false}
             />
           </FestCircleTop>
-          <i className="fas fa-chevron-down fa-2x"></i>
+          <i
+            className="fas fa-chevron-down fa-2x"
+            onClick={() => setList(!list)}
+          ></i>
           <FestCircleBottom className="circlebottom">
             <Images
               pic={`assets/${imagesLogo.bottom}`}
@@ -230,7 +236,7 @@ const Fest = () => {
         </FestCircles>
       </FestName>
       <FestYear>{itemYear}</FestYear>
-      <FestList>list</FestList>
+      {list && <List fest={fest} year={year} />}
     </FestStyle>
   );
 };
