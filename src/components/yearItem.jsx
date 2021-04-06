@@ -77,8 +77,11 @@ const YearStyle = styled.div`
   background-position: 50% 35%;
   border-radius: 25px;
   cursor: pointer;
-  ${(props) => props.animation === true && wrapAnimation};
-  animation-iteration-count: 1;
+  :not(:first-child) {
+    ${(props) => props.animation === true && wrapAnimation};
+    animation-iteration-count: 1;
+  }
+
   :nth-child(3) {
     grid-row: span 3 / auto;
   }
@@ -112,6 +115,7 @@ const YearStyle = styled.div`
 
 const Year = (props) => {
   const [animation, setAnimation] = useState(false);
+  const [list, setList] = useState(null);
 
   useEffect(() => {
     setAnimation(true);

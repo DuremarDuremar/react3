@@ -3,7 +3,7 @@ import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
 import Year from "../components/yearItem";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 
 const FestStyle = styled.section`
   padding: 25px;
@@ -11,7 +11,6 @@ const FestStyle = styled.section`
 `;
 const FestName = styled.nav`
   display: flex;
-  /* background-color: green; */
   justify-content: space-between;
   position: relative;
 `;
@@ -80,14 +79,17 @@ const NameLogo = styled.div`
 `;
 
 const rotate = keyframes`
-    0% {
-    opacity: 0;
-    transform: translateY(2rem);
+ from {
+    transform: rotate(0deg);
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+
+  to {
+    transform: rotate(360deg);
   }
+`;
+
+const wrapAnimation = css`
+  animation: ${rotate} 0.8s linear infinite;
 `;
 
 const FestCircles = styled.div`
@@ -95,7 +97,7 @@ const FestCircles = styled.div`
   cursor: pointer;
   bottom: -130px;
   left: 55%;
-  animation: ${rotate} 1s linear infinite;
+  ${(props) => props.animation === true && wrapAnimation};
   animation-iteration-count: 1;
   i {
     position: absolute;
@@ -146,9 +148,21 @@ const FestList = styled.div``;
 const Fest = () => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
-  const [rotateCircle, setRotateCircle] = useState(false);
+  const [animation, setAnimation] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setAnimation(true);
+  }, [fest, year]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (animation) {
+        setAnimation(false);
+      }
+    }, 1000);
+  }, [animation]);
+
+  console.log(animation);
 
   const imagesLogo = {
     top: `${fest}Top.png`,
@@ -197,7 +211,7 @@ const Fest = () => {
         <NameLogo>
           <img src={logo} alt="logo" />
         </NameLogo>
-        <FestCircles>
+        <FestCircles animation={animation}>
           <FestCircleTop className="circletop">
             <Images
               pic={`assets/${imagesLogo.top}`}
