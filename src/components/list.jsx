@@ -3,19 +3,27 @@ import styled from "styled-components";
 import { getAxiosFilm } from "../server/serverFest";
 
 const List = (props) => {
-  const [item, setItem] = useState(null);
+  const [items, setItems] = useState(null);
+  const [itemsView, setItemsView] = useState(0, 8);
   useEffect(() => {
-    getAxiosFilm(props.fest, props.year).then((response) => setItem(response));
+    getAxiosFilm(props.fest, props.year, itemsView).then((response) =>
+      setItems(response)
+    );
   }, [props.fest, props.year]);
 
-  console.log(item);
+  console.log(items);
 
-  return (
-    <div>
-      {/* <p>{Cannes["2010s"][0]}</p> */}
-      {/* <p>{array[listLink][0]}</p> */}
-    </div>
-  );
+  if (items) {
+    return (
+      <div>
+        {items.map((item, index) => {
+          return <div key={index}>{item.nameRu}</div>;
+        })}
+      </div>
+    );
+  } else {
+    return <p>55</p>;
+  }
 };
 
 export default List;
