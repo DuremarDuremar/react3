@@ -20,10 +20,14 @@ const Item = styled.div`
 const List = (props) => {
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, 8]);
+  const [hasMore, setHasMore] = useState(true);
   useEffect(() => {
-    getAxiosFilm(props.fest, props.year, itemsView).then((response) =>
-      setItems(!items ? response : [...items, ...response])
-    );
+    getAxiosFilm(props.fest, props.year, itemsView).then((response) => {
+      setItems((prevItems) =>
+        !prevItems ? response : [...prevItems, ...response]
+      );
+      response.length < 1 && setHasMore(false);
+    });
   }, [props.fest, props.year, itemsView]);
 
   console.log(items);
@@ -34,7 +38,8 @@ const List = (props) => {
         <InfiniteScroll
           dataLength={items.length}
           next={() => setItemsView([items.length, items.length + 8])}
-          hasMore={true}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
         >
           {items.map((item, index) => {
             return (
