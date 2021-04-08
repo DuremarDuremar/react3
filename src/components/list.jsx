@@ -17,6 +17,8 @@ const Item = styled.div`
   }
 `;
 
+const Loading = styled.div``;
+
 const List = (props) => {
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, 8]);
@@ -26,40 +28,38 @@ const List = (props) => {
       setItems((prevItems) =>
         !prevItems ? response : [...prevItems, ...response]
       );
-      console.log(response);
     });
   }, [props.fest, props.year, itemsView]);
 
   useEffect(() => {
     if (items) {
-      itemsView[1] > items.length && setHasMore(false);
+      console.log("items.length", items.length);
+      console.log("itemsView[1]", itemsView[1]);
+      itemsView[1] > items.length + 8 && setHasMore(false);
     }
   }, [itemsView, items]);
 
-  console.log("itemsView[1]", itemsView[1]);
   console.log("hasMore", hasMore);
-
-  // const ff = useCallback(() => {
-  //   setItemsView((prevItemsView) => [prevItemsView[1], prevItemsView[1] + 8]);
-  // }, []);
 
   if (items) {
     return (
       <ListStyle>
         <InfiniteScroll
-          // pageStart={0}
+          pageStart={items.length}
           loadMore={() =>
             setItemsView((prevItemsView) => [
               prevItemsView[1],
-              prevItemsView[1] + 8,
+              prevItemsView[1] + 16,
             ])
           }
           hasMore={hasMore}
-          loader={<p key={0}>loader</p>}
+          loader={<Loading key={0}>Loading...</Loading>}
+          threshold={150}
+          useWindow={true}
         >
           {items.map((item, index) => {
             return (
-              <Item key={item.filmId + index}>
+              <Item key={`${item.filmId} + item.nameEn + ${index}`}>
                 {/* <img src={item.posterUrlPreview} alt="img" /> */}
                 <p>{item.nameRu}</p>
               </Item>
