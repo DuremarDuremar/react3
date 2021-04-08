@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroller";
 import { getAxiosFilm } from "../server/serverFest";
 
 const ListStyle = styled.section`
@@ -26,25 +26,42 @@ const List = (props) => {
       setItems((prevItems) =>
         !prevItems ? response : [...prevItems, ...response]
       );
-      response.length < 1 && setHasMore(false);
+      console.log(response);
     });
   }, [props.fest, props.year, itemsView]);
 
-  console.log(items);
+  useEffect(() => {
+    if (items) {
+      itemsView[1] > items.length && setHasMore(false);
+    }
+  }, [itemsView, items]);
+
+  console.log("itemsView[1]", itemsView[1]);
+  console.log("hasMore", hasMore);
+
+  // const ff = useCallback(() => {
+  //   setItemsView((prevItemsView) => [prevItemsView[1], prevItemsView[1] + 8]);
+  // }, []);
 
   if (items) {
     return (
       <ListStyle>
         <InfiniteScroll
-          dataLength={items.length}
-          next={() => setItemsView([items.length, items.length + 8])}
+          // pageStart={0}
+          loadMore={() =>
+            setItemsView((prevItemsView) => [
+              prevItemsView[1],
+              prevItemsView[1] + 8,
+            ])
+          }
           hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
+          loader={<p key={0}>loader</p>}
         >
           {items.map((item, index) => {
             return (
-              <Item key={index}>
-                <img src={item.posterUrlPreview} alt="img" />
+              <Item key={item.filmId + index}>
+                {/* <img src={item.posterUrlPreview} alt="img" /> */}
+                <p>{item.nameRu}</p>
               </Item>
             );
           })}
