@@ -144,8 +144,6 @@ const FestYear = styled.nav`
   grid-gap: 10px;
 `;
 
-const FestList = styled.div``;
-
 const Fest = () => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
@@ -184,7 +182,10 @@ const Fest = () => {
     <Year
       key={index}
       act={item === year ? true : false}
-      onClick={() => setYear(typeof item === "string" ? item : year)}
+      onClick={() => {
+        setYear(typeof item === "string" ? item : year);
+        setList((prevList) => prevList === true && false);
+      }}
       index={index}
       fest={`${fest}PosterImages`}
     >
