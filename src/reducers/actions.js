@@ -1,8 +1,8 @@
-const res1000 = (res) => {
+const res1100 = (res) => {
   return {
-    type: "1000",
+    type: "1100",
     payload: res,
   };
 };
 
-export { res1000 };
+export { res1100 };

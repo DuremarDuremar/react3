@@ -6,7 +6,7 @@ import updateResponsive from "./updateResponsiv";
 const reducer = (state, action) => {
   // console.log(action.type);
   return {
-    filmResponsive: updateResponsive(state, action),
+    responsive: updateResponsive(state, action),
   };
 };
 

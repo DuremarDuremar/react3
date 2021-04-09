@@ -1,15 +1,15 @@
 const updateResponsive = (state, action) => {
   if (state === undefined) {
     return {
-      1000: true,
+      r1100: true,
     };
   }
 
   switch (action.type) {
-    case "1000":
+    case "1100":
       return {
         ...state.responsive,
-        1000: action.payload,
+        r1100: action.payload,
       };
 
     default:

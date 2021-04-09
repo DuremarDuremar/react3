@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { res1100 } from "../reducers/actions";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroller";
 import { getAxiosFilm } from "../server/serverFest";
@@ -6,9 +8,10 @@ import { getAxiosFilm } from "../server/serverFest";
 const Items = styled(InfiniteScroll)`
   margin-top: 40px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
   text-align: center;
+  grid-template-columns: ${(props) =>
+    props.r1100 ? "repeat(4, 1fr)" : "repeat(3, 1fr)"};
 `;
 
 const Item = styled.div`
@@ -63,20 +66,20 @@ const ItemInfo = styled.div`
 
 const Loading = styled.div``;
 
-const List = (props) => {
+const List = ({ fest, year, r1100 }) => {
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, 8]);
   const [hasMore, setHasMore] = useState(true);
   useEffect(() => {
-    getAxiosFilm(props.fest, props.year, itemsView).then((response) => {
+    getAxiosFilm(fest, year, itemsView).then((response) => {
       response.length < 8 && setHasMore(false);
       setItems((prevItems) =>
         !prevItems ? response : [...prevItems, ...response]
       );
     });
-  }, [props.fest, props.year, itemsView]);
+  }, [fest, year, itemsView]);
 
-  // console.log(items);
+  console.log(typeof r1100);
 
   if (items) {
     return (
@@ -93,7 +96,7 @@ const List = (props) => {
         hasMore={hasMore}
         loader={<Loading key={0}>Loading...</Loading>}
         threshold={50}
-        // useWindow={true}
+        r1100={r1100 ? 1 : 0}
       >
         {items.map((item, index) => {
           return (
@@ -118,4 +121,12 @@ const List = (props) => {
   }
 };
 
-export default List;
+const mapStateToProps = ({ responsive: { r1100 } }) => {
+  return { r1100 };
+};
+
+const mapDispatchToProps = {
+  res1100,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);

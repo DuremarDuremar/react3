@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { res1000 } from "./reducers/actions";
+import { res1100 } from "./reducers/actions";
 import { connect } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -50,14 +50,12 @@ const AppStyle = styled.div`
   font-family: "Yatra One", cursive;
 `;
 
-const App = ({ res1000 }) => {
-  const responce1000 = useMediaQuery({ query: "(min-width: 1000px)" });
+const App = ({ res1100 }) => {
+  const responce1100 = useMediaQuery({ query: "(min-width: 1100px)" });
 
   useEffect(() => {
-    res1000(responce1000);
-  }, [responce1000, res1000]);
-
-  console.log(responce1000);
+    res1100(responce1100);
+  }, [responce1100, res1100]);
 
   return (
     <Router>
@@ -73,6 +71,6 @@ const App = ({ res1000 }) => {
   );
 };
 
-const mapDispatchToProps = { res1000 };
+const mapDispatchToProps = { res1100 };
 
 export default connect(null, mapDispatchToProps)(App);
