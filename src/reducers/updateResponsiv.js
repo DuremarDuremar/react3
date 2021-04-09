@@ -2,6 +2,7 @@ const updateResponsive = (state, action) => {
   if (state === undefined) {
     return {
       r1100: true,
+      r700: true,
     };
   }
 
@@ -11,7 +12,11 @@ const updateResponsive = (state, action) => {
         ...state.responsive,
         r1100: action.payload,
       };
-
+    case "700":
+      return {
+        ...state.responsive,
+        r700: action.payload,
+      };
     default:
       return state.responsive;
   }

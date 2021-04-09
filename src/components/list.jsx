@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { res1100 } from "../reducers/actions";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroller";
 import { getAxiosFilm } from "../server/serverFest";
@@ -11,7 +10,11 @@ const Items = styled(InfiniteScroll)`
   grid-gap: 20px;
   text-align: center;
   grid-template-columns: ${(props) =>
-    props.r1100 ? "repeat(4, 1fr)" : "repeat(3, 1fr)"};
+    props.r1100
+      ? "repeat(4, 1fr)"
+      : props.r700
+      ? "repeat(3, 1fr)"
+      : "repeat(2, 1fr)"};
 `;
 
 const Item = styled.div`
@@ -44,7 +47,7 @@ const Item = styled.div`
   img {
     cursor: pointer;
     width: 100%;
-    height: 400px;
+    max-height: 500px;
     /* border-bottom-right-radius: 15% 60%; */
     /* border-bottom-left-radius: 15% 60%; */
   }
@@ -66,7 +69,7 @@ const ItemInfo = styled.div`
 
 const Loading = styled.div``;
 
-const List = ({ fest, year, r1100 }) => {
+const List = ({ fest, year, r1100, r700 }) => {
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, 8]);
   const [hasMore, setHasMore] = useState(true);
@@ -97,6 +100,7 @@ const List = ({ fest, year, r1100 }) => {
         loader={<Loading key={0}>Loading...</Loading>}
         threshold={50}
         r1100={r1100 ? 1 : 0}
+        r700={r700 ? 1 : 0}
       >
         {items.map((item, index) => {
           return (
@@ -121,12 +125,8 @@ const List = ({ fest, year, r1100 }) => {
   }
 };
 
-const mapStateToProps = ({ responsive: { r1100 } }) => {
-  return { r1100 };
+const mapStateToProps = ({ responsive: { r1100, r700 } }) => {
+  return { r1100, r700 };
 };
 
-const mapDispatchToProps = {
-  res1100,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps)(List);

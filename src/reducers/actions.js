@@ -4,5 +4,10 @@ const res1100 = (res) => {
     payload: res,
   };
 };
-
-export { res1100 };
+const res700 = (res) => {
+  return {
+    type: "700",
+    payload: res,
+  };
+};
+export { res1100, res700 };
