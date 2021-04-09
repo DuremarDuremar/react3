@@ -1,3 +1,7 @@
+import React, { useEffect } from "react";
+import { res1000 } from "./reducers/actions";
+import { connect } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Fest from "./pages/fest.jsx";
 import Direct from "./pages/direct.jsx";
@@ -46,7 +50,15 @@ const AppStyle = styled.div`
   font-family: "Yatra One", cursive;
 `;
 
-function App() {
+const App = ({ res1000 }) => {
+  const responce1000 = useMediaQuery({ query: "(min-width: 1000px)" });
+
+  useEffect(() => {
+    res1000(responce1000);
+  }, [responce1000, res1000]);
+
+  console.log(responce1000);
+
   return (
     <Router>
       <Global />
@@ -59,6 +71,8 @@ function App() {
       </AppStyle>
     </Router>
   );
-}
+};
 
-export default App;
+const mapDispatchToProps = { res1000 };
+
+export default connect(null, mapDispatchToProps)(App);
