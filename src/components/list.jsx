@@ -7,6 +7,16 @@ import { getAxiosFilm } from "../server/serverFest";
 const Items = styled(InfiniteScroll)`
   margin-top: 40px;
   display: ${(props) => (props.r480 ? "grid" : "div")};
+  position: relative;
+  ${(props) =>
+    !props.r480 &&
+    `
+    width: 220px;
+    height: 420px;
+    margin: 50px auto;
+    transform: rotate(10deg);
+    cursor:pointer;
+  `}
   grid-gap: 20px;
   text-align: center;
   grid-template-columns: ${(props) =>
@@ -23,8 +33,24 @@ const Item = styled.div`
   position: relative;
   overflow: hidden;
   transition: 0.15s ease-in-out all;
-
-  :hover {
+  ${(props) =>
+    props.r480 &&
+    `
+  :hover{
+    transform: scale(1.04) 
+  }
+  `}
+  ${(props) =>
+    !props.r480 &&
+    `
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform-origin: 50% 200% 0;
+    outline: 1px solid #fbfbfb;
+    :hover {
     border-radius: 95px 0 0 0;
   }
   :after {
@@ -44,12 +70,12 @@ const Item = styled.div`
     transform: rotate(-8deg) translate3d(0, 0, 0);
     background-color: #b8860b;
   }
+  `}
+
   img {
     cursor: pointer;
     width: 100%;
     max-height: 500px;
-    /* border-bottom-right-radius: 15% 60%; */
-    /* border-bottom-left-radius: 15% 60%; */
   }
 `;
 
@@ -70,37 +96,66 @@ const ItemInfo = styled.div`
 const Loading = styled.div``;
 
 const List = ({ fest, year, r1100, r780, r480 }) => {
-  let loadingsB = r1100 ? 8 : r780 ? 6 : r480 ? 4 : 2;
+  let loadingsB = r1100 ? 8 : r780 ? 6 : 4;
 
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, loadingsB]);
   const [hasMore, setHasMore] = useState(true);
+  const [counterA, setCounterA] = useState(-1);
+  const [counterB, setCounterB] = useState(0);
+
+  useEffect(() => {
+    if (!r480 && items) {
+      setItems(items.reverse());
+    }
+  }, [items, r480]);
 
   useEffect(() => {
     getAxiosFilm(fest, year, itemsView).then((response) => {
       response.length < 1 && setHasMore(false);
       setItems((prevItems) =>
-        !prevItems ? response : [...prevItems, ...response]
+        !prevItems
+          ? response
+          : r480
+          ? [...prevItems, ...response]
+          : [...response, ...prevItems]
       );
     });
-  }, [fest, year, itemsView]);
+  }, [fest, year, itemsView, r480]);
 
-  // console.log("r480", r480);
-  // console.log("r780", r780);
-  console.log(itemsView);
+  const filter480 = (id) => {
+    if (!r480) {
+      const newItem = items.filter((item) => item.filmId !== id);
+      setItems(newItem);
+      setCounterA(counterB);
+      setCounterB(counterB + 1);
+    }
+  };
+
+  useEffect(() => {
+    if (!r480) {
+      setItemsView([loadingsB + counterA, loadingsB + counterB]);
+    }
+  }, [counterA, counterB, loadingsB, r480]);
+
+  // console.log("counterA", counterA);
+  // console.log("counterB", counterB);
+  // console.log(items, "items");
+  // console.log("itemsView", itemsView);
 
   if (items) {
     return (
       <Items
         pageStart={items.length}
-        loadMore={() =>
-          setTimeout(() => {
-            setItemsView((prevItemsView) => [
-              prevItemsView[1],
-              prevItemsView[1] + loadingsB,
-            ]);
-          }, 1000)
-        }
+        loadMore={() => {
+          r480 &&
+            setTimeout(() => {
+              setItemsView((prevItemsView) => [
+                prevItemsView[1],
+                prevItemsView[1] + loadingsB,
+              ]);
+            }, 1000);
+        }}
         hasMore={hasMore}
         loader={<Loading key={0}>Loading...</Loading>}
         threshold={0}
@@ -110,9 +165,18 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
       >
         {items.map((item, index) => {
           return (
-            <Item key={`${item.filmId} + item.nameEn + ${index}`}>
+            <Item
+              key={`${item.filmId} + item.nameEn + ${index}`}
+              r480={r480}
+              onClick={() => filter480(item.filmId)}
+            >
               <img src={item.posterUrlPreview} alt="img" />
-              <ItemInfo>
+              <ItemInfo
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log(item.filmId);
+                }}
+              >
                 <div className="name">{item.nameRu}</div>
                 <div className="country">
                   {item.countries.map((item, index) =>
