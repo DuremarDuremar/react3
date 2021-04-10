@@ -6,13 +6,13 @@ import { getAxiosFilm } from "../server/serverFest";
 
 const Items = styled(InfiniteScroll)`
   margin-top: 40px;
-  display: grid;
+  display: ${(props) => (props.r480 ? "grid" : "div")};
   grid-gap: 20px;
   text-align: center;
   grid-template-columns: ${(props) =>
     props.r1100
       ? "repeat(4, 1fr)"
-      : props.r700
+      : props.r780
       ? "repeat(3, 1fr)"
       : "repeat(2, 1fr)"};
 `;
@@ -69,20 +69,25 @@ const ItemInfo = styled.div`
 
 const Loading = styled.div``;
 
-const List = ({ fest, year, r1100, r700 }) => {
+const List = ({ fest, year, r1100, r780, r480 }) => {
+  let loadingsB = r1100 ? 8 : r780 ? 6 : r480 ? 4 : 2;
+
   const [items, setItems] = useState(null);
-  const [itemsView, setItemsView] = useState([0, 8]);
+  const [itemsView, setItemsView] = useState([0, loadingsB]);
   const [hasMore, setHasMore] = useState(true);
+
   useEffect(() => {
     getAxiosFilm(fest, year, itemsView).then((response) => {
-      response.length < 8 && setHasMore(false);
+      response.length < 1 && setHasMore(false);
       setItems((prevItems) =>
         !prevItems ? response : [...prevItems, ...response]
       );
     });
   }, [fest, year, itemsView]);
 
-  console.log(typeof r1100);
+  // console.log("r480", r480);
+  // console.log("r780", r780);
+  console.log(itemsView);
 
   if (items) {
     return (
@@ -92,15 +97,16 @@ const List = ({ fest, year, r1100, r700 }) => {
           setTimeout(() => {
             setItemsView((prevItemsView) => [
               prevItemsView[1],
-              prevItemsView[1] + 8,
+              prevItemsView[1] + loadingsB,
             ]);
           }, 1000)
         }
         hasMore={hasMore}
         loader={<Loading key={0}>Loading...</Loading>}
-        threshold={50}
+        threshold={0}
         r1100={r1100 ? 1 : 0}
-        r700={r700 ? 1 : 0}
+        r780={r780 ? 1 : 0}
+        r480={r480 ? 1 : 0}
       >
         {items.map((item, index) => {
           return (
@@ -125,8 +131,8 @@ const List = ({ fest, year, r1100, r700 }) => {
   }
 };
 
-const mapStateToProps = ({ responsive: { r1100, r700 } }) => {
-  return { r1100, r700 };
+const mapStateToProps = ({ responsive: { r1100, r780, r480 } }) => {
+  return { r1100, r780, r480 };
 };
 
 export default connect(mapStateToProps)(List);
