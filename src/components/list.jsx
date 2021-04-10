@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroller";
+import { animateScroll as scroll } from "react-scroll";
 import { getAxiosFilm } from "../server/serverFest";
 
 const Items = styled(InfiniteScroll)`
@@ -93,6 +94,21 @@ const ItemInfo = styled.div`
   }
 `;
 
+const Up = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  i {
+    transition: 0.25s ease-in-out all;
+    color: black;
+    cursor: pointer;
+    :hover {
+      color: #b8860b;
+    }
+  }
+`;
+
 const Loading = styled.div``;
 
 const List = ({ fest, year, r1100, r780, r480 }) => {
@@ -101,8 +117,8 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, loadingsB]);
   const [hasMore, setHasMore] = useState(true);
-  const [counterA, setCounterA] = useState(-1);
-  const [counterB, setCounterB] = useState(0);
+  const [counterA, setCounterA] = useState(0);
+  const [counterB, setCounterB] = useState(1);
 
   useEffect(() => {
     if (!r480 && items) {
@@ -113,13 +129,17 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
   useEffect(() => {
     getAxiosFilm(fest, year, itemsView).then((response) => {
       response.length < 1 && setHasMore(false);
-      setItems((prevItems) =>
-        !prevItems
+      setItems((prevItems) => {
+        let arr = !prevItems
           ? response
           : r480
           ? [...prevItems, ...response]
-          : [...response, ...prevItems]
-      );
+          : [...response, ...prevItems];
+        return arr.filter(
+          (item, index, a) =>
+            a.findIndex((t) => t.filmId === item.filmId) === index
+        );
+      });
     });
   }, [fest, year, itemsView, r480]);
 
@@ -135,13 +155,15 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
   useEffect(() => {
     if (!r480) {
       setItemsView([loadingsB + counterA, loadingsB + counterB]);
+    } else {
+      setItemsView([loadingsB + counterA, loadingsB + counterB]);
     }
   }, [counterA, counterB, loadingsB, r480]);
 
-  // console.log("counterA", counterA);
-  // console.log("counterB", counterB);
-  // console.log(items, "items");
-  // console.log("itemsView", itemsView);
+  console.log("counterA", counterA);
+  console.log("counterB", counterB);
+  console.log(items, "items");
+  console.log("itemsView", itemsView);
 
   if (items) {
     return (
@@ -188,10 +210,18 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
             </Item>
           );
         })}
+        {!hasMore && r480 && (
+          <Up>
+            <i
+              className="fas fa-angle-double-up fa-4x"
+              onClick={() => scroll.scrollToTop()}
+            ></i>
+          </Up>
+        )}
       </Items>
     );
   } else {
-    return <p>55</p>;
+    return <Loading>Loading...</Loading>;
   }
 };
 

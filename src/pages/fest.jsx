@@ -4,6 +4,7 @@ import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
 import Year from "../components/yearItem";
 import List from "../components/list";
+import { animateScroll as scroll } from "react-scroll";
 import styled, { keyframes, css } from "styled-components";
 
 const FestStyle = styled.section`
@@ -224,8 +225,13 @@ const Fest = () => {
             />
           </FestCircleTop>
           <i
-            className="fas fa-chevron-down fa-2x"
-            onClick={() => setList(!list)}
+            className={
+              !list ? "fas fa-chevron-down fa-2x" : "fas fa-chevron-up fa-2x"
+            }
+            onClick={() => {
+              setList(!list);
+              scroll.scrollToBottom();
+            }}
           ></i>
           <FestCircleBottom className="circlebottom">
             <Images
