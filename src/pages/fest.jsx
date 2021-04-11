@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
+import charlie from "../images/charlie.png";
 import Images from "../components/images";
 import { connect } from "react-redux";
 import Year from "../components/yearItem";
@@ -27,7 +28,7 @@ const NameNav = styled.ul`
   background-repeat: no-repeat;
   background-size: calc(180px + 37vw) calc(200px + 10vw);
   background-attachment: local;
-  padding-right: 20px;
+  padding-right: ${(props) => props.r780 && "20px"};
 `;
 
 const Name = styled.li`
@@ -98,8 +99,9 @@ const wrapAnimation = css`
 const FestCircles = styled.div`
   position: absolute;
   cursor: pointer;
-  bottom: -130px;
-  left: 55%;
+  bottom: ${(props) => (props.r780 ? "-130px" : "-165px")};
+  left: ${(props) => (props.r780 ? "55%" : "69%")};
+
   ${(props) => props.animation === true && wrapAnimation};
   animation-iteration-count: 1;
   i {
@@ -146,6 +148,20 @@ const FestYear = styled.nav`
   grid-gap: 10px;
 `;
 
+const Chaplin = styled.div`
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  img {
+    max-width: 100%;
+    border-radius: 100%;
+    transition: all 0.6s linear;
+    :hover {
+      background-color: #dfe4ea;
+    }
+  }
+`;
+
 const Fest = ({ r780 }) => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
@@ -170,7 +186,9 @@ const Fest = ({ r780 }) => {
   };
 
   const itemYear = [
-    44,
+    <Chaplin>
+      <img src={charlie} alt="" />
+    </Chaplin>,
     "2010s",
     null,
     "2000s",
@@ -187,6 +205,7 @@ const Fest = ({ r780 }) => {
       onClick={() => {
         setYear(typeof item === "string" ? item : year);
         setList((prevList) => prevList === true && false);
+        !r780 && scroll.scrollToTop();
       }}
       index={index}
       fest={`${fest}PosterImages`}
@@ -211,16 +230,16 @@ const Fest = ({ r780 }) => {
     )
   );
 
-  console.log(r780);
-
   return (
     <FestStyle>
       <FestName>
-        <NameNav>{itemName}</NameNav>
-        <NameLogo>
-          <img src={logo} alt="logo" />
-        </NameLogo>
-        <FestCircles animation={animation}>
+        <NameNav r780={r780}>{itemName}</NameNav>
+        {r780 && (
+          <NameLogo>
+            <img src={logo} alt="logo" />
+          </NameLogo>
+        )}
+        <FestCircles animation={animation} r780={r780}>
           <FestCircleTop className="circletop">
             <Images
               pic={`assets/${imagesLogo.top}`}

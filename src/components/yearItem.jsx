@@ -76,10 +76,18 @@ const YearStyle = styled.div`
   background-repeat: no-repeat;
   background-position: 50% 35%;
   border-radius: 25px;
-  cursor: pointer;
+
+  ${(props) =>
+    !props.r780 &&
+    `
+      max-width: 450px;
+      margin: 0 auto;
+      `}
+
   :not(:first-child) {
     ${(props) => props.animation === true && wrapAnimation};
     animation-iteration-count: 1;
+    cursor: pointer;
   }
 
   :nth-last-child(-n + 4) {
@@ -99,6 +107,7 @@ const YearStyle = styled.div`
 
   :first-child {
     text-align: left;
+    margin-bottom: ${(props) => !props.r780 && "30px"};
   }
 
   p {
@@ -130,8 +139,6 @@ const YearStyle = styled.div`
 
 const Year = (props) => {
   const [animation, setAnimation] = useState(false);
-
-  console.log(props.fest);
 
   useEffect(() => {
     setAnimation(true);
