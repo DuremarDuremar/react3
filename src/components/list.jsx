@@ -160,10 +160,10 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
     }
   }, [counterA, counterB, loadingsB, r480]);
 
-  console.log("counterA", counterA);
-  console.log("counterB", counterB);
-  console.log(items, "items");
-  console.log("itemsView", itemsView);
+  // console.log("counterA", counterA);
+  // console.log("counterB", counterB);
+  // console.log(items, "items");
+  // console.log("itemsView", itemsView);
 
   if (items) {
     return (

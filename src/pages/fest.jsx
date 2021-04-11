@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import Images from "../components/images";
+import { connect } from "react-redux";
 import Year from "../components/yearItem";
 import List from "../components/list";
 import { animateScroll as scroll } from "react-scroll";
@@ -140,12 +141,12 @@ const FestCircleBottom = styled.div`
 `;
 const FestYear = styled.nav`
   padding-top: 50px;
-  display: grid;
+  display: ${(props) => (props.r780 ? "grid" : "div")};
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 10px;
 `;
 
-const Fest = () => {
+const Fest = ({ r780 }) => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
   const [list, setList] = useState(false);
@@ -189,6 +190,7 @@ const Fest = () => {
       }}
       index={index}
       fest={`${fest}PosterImages`}
+      r780={r780}
     >
       {typeof item === "string" ? <p>{item}</p> : item}
     </Year>
@@ -208,6 +210,8 @@ const Fest = () => {
       </Name>
     )
   );
+
+  console.log(r780);
 
   return (
     <FestStyle>
@@ -242,10 +246,14 @@ const Fest = () => {
           </FestCircleBottom>
         </FestCircles>
       </FestName>
-      <FestYear>{itemYear}</FestYear>
+      <FestYear r780={r780 ? 1 : 0}>{itemYear}</FestYear>
       {list && <List fest={fest} year={year} />}
     </FestStyle>
   );
 };
 
-export default Fest;
+const mapStateToProps = ({ responsive: { r780 } }) => {
+  return { r780 };
+};
+
+export default connect(mapStateToProps)(Fest);

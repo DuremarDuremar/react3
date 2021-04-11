@@ -82,8 +82,23 @@ const YearStyle = styled.div`
     animation-iteration-count: 1;
   }
 
+  :nth-last-child(-n + 4) {
+    display: ${(props) =>
+      !props.r780 && props.fest === "SundancePosterImages" && "none"};
+  }
+
+  :last-child {
+    display: ${(props) =>
+      !props.r780 && props.fest === "BerlinPosterImages" && "none"};
+  }
+
   :nth-child(3) {
     grid-row: span 3 / auto;
+    display: ${(props) => !props.r780 && "none"};
+  }
+
+  :first-child {
+    text-align: left;
   }
 
   p {
@@ -115,6 +130,8 @@ const YearStyle = styled.div`
 
 const Year = (props) => {
   const [animation, setAnimation] = useState(false);
+
+  console.log(props.fest);
 
   useEffect(() => {
     setAnimation(true);
