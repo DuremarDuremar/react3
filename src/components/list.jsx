@@ -81,7 +81,7 @@ const Item = styled.div`
   }
 `;
 
-const ItemInfo = styled.div`
+const ItemInfo = styled(Link)`
   .name,
   .year {
     background-color: #b8860b;
@@ -195,6 +195,7 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
             >
               <img src={item.posterUrlPreview} alt="img" />
               <ItemInfo
+                to={item.nameEn}
                 onClick={(e) => {
                   e.stopPropagation();
                   console.log(item.filmId);

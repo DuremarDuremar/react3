@@ -68,7 +68,7 @@ const App = ({ res1100, res780, res480 }) => {
         <Switch>
           <Route path="/" component={Fest} exact />
           <Route path="/direct" component={Direct} />
-          <Route path="/cart/:id" component={Cart} />
+          <Route path="/:id" component={Cart} />
         </Switch>
       </AppStyle>
     </Router>
