@@ -2,16 +2,33 @@ import React, { useState, useEffect } from "react";
 import logo from "../images/cinemaLogo.jpg";
 import macabre from "../images/danse-macabre.png";
 import charlie from "../images/charlie.png";
+import background from "../images/background.jpg";
 import Images from "../components/images";
 import { connect } from "react-redux";
 import Year from "../components/yearItem";
 import List from "../components/list";
+import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
 import styled, { keyframes, css } from "styled-components";
 
 const FestStyle = styled.section`
   padding: 25px;
   color: #dfe4ea;
+  ${(props) =>
+    !props.r780 &&
+    `
+  background-image: url(${background});
+  background-repeat: no-repeat;
+  background-size: calc(280px + 57vw) 120px;
+  background-attachment: local;
+  background-position: 50% 0;
+ `}
+  ${(props) =>
+    !props.r480 &&
+    `
+  background-size: calc(280px + 57vw) 165px;
+  
+ `}
 `;
 const FestName = styled.nav`
   display: flex;
@@ -19,15 +36,32 @@ const FestName = styled.nav`
   position: relative;
 `;
 const NameNav = styled.ul`
-  display: flex;
   padding-top: 30px;
+  ${(props) =>
+    !props.r480 &&
+    `
+  display: grid;
+  grid-template-columns:repeat(2, 1fr);
+  grid-gap: 20px;
+  margin: 0 auto;
+ `}
+  ${(props) =>
+    props.r480 &&
+    `
+  display: flex;
   flex: 1 1 55%;
   justify-content: space-around;
   flex-wrap: wrap;
+ `}
+
+  ${(props) =>
+    props.r780 &&
+    `
   background-image: url(${macabre});
   background-repeat: no-repeat;
   background-size: calc(180px + 37vw) calc(200px + 10vw);
   background-attachment: local;
+ `}
   padding-right: ${(props) => props.r780 && "20px"};
 `;
 
@@ -39,6 +73,7 @@ const Name = styled.li`
   box-shadow: 0px 0px 0px 1px #353b48;
   transition: box-shadow 0.6s linear;
   box-shadow: ${(props) => props.act && "0px 0px 0px 3px black"};
+  background-color: ${(props) => !props.r480 && "black"};
 
   span {
     transition: all ease-out 0.35s;
@@ -100,7 +135,7 @@ const FestCircles = styled.div`
   position: absolute;
   cursor: pointer;
   bottom: ${(props) => (props.r780 ? "-130px" : "-165px")};
-  left: ${(props) => (props.r780 ? "55%" : "69%")};
+  left: ${(props) => (props.r780 ? "55%" : props.r480 ? "63vw" : "60%")};
 
   ${(props) => props.animation === true && wrapAnimation};
   animation-iteration-count: 1;
@@ -152,6 +187,8 @@ const Chaplin = styled.div`
   width: 120px;
   height: 120px;
   cursor: pointer;
+  padding-left: ${(props) => !props.r480 && "8vw"};
+
   img {
     max-width: 100%;
     border-radius: 100%;
@@ -162,7 +199,14 @@ const Chaplin = styled.div`
   }
 `;
 
-const Fest = ({ r780 }) => {
+const FestTitle = styled.div`
+  font-size: calc(15px + 1vw);
+  font-style: italic;
+  font-family: "New Tegomin", serif;
+  text-align: center;
+`;
+
+const Fest = ({ r780, r480 }) => {
   const [fest, setFest] = useState("Cannes");
   const [year, setYear] = useState("2010s");
   const [list, setList] = useState(false);
@@ -186,9 +230,11 @@ const Fest = ({ r780 }) => {
   };
 
   const itemYear = [
-    <Chaplin>
-      <img src={charlie} alt="" />
-    </Chaplin>,
+    <Link to="/direct">
+      <Chaplin r480={r480}>
+        <img src={charlie} alt="" />
+      </Chaplin>
+    </Link>,
     "2010s",
     null,
     "2000s",
@@ -224,6 +270,7 @@ const Fest = ({ r780 }) => {
           setFest(item);
           setList(false);
         }}
+        r480={r480}
       >
         <span>{item}</span>
       </Name>
@@ -231,15 +278,18 @@ const Fest = ({ r780 }) => {
   );
 
   return (
-    <FestStyle>
+    <FestStyle r780={r780} r480={r480}>
+      {!r780 && <FestTitle>Cinema Festivals</FestTitle>}
       <FestName>
-        <NameNav r780={r780}>{itemName}</NameNav>
+        <NameNav r780={r780} r480={r480}>
+          {itemName}
+        </NameNav>
         {r780 && (
           <NameLogo>
             <img src={logo} alt="logo" />
           </NameLogo>
         )}
-        <FestCircles animation={animation} r780={r780}>
+        <FestCircles animation={animation} r780={r780} r480={r480}>
           <FestCircleTop className="circletop">
             <Images
               pic={`assets/${imagesLogo.top}`}
@@ -271,8 +321,8 @@ const Fest = ({ r780 }) => {
   );
 };
 
-const mapStateToProps = ({ responsive: { r780 } }) => {
-  return { r780 };
+const mapStateToProps = ({ responsive: { r780, r480 } }) => {
+  return { r780, r480 };
 };
 
 export default connect(mapStateToProps)(Fest);

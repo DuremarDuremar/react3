@@ -5,7 +5,7 @@ import { useMediaQuery } from "react-responsive";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Fest from "./pages/fest.jsx";
 import Direct from "./pages/direct.jsx";
-import Cart from "./pages/cart.jsx";
+import Cart from "./components/cart.jsx";
 import styled, { createGlobalStyle } from "styled-components";
 
 const Global = createGlobalStyle`
@@ -68,7 +68,7 @@ const App = ({ res1100, res780, res480 }) => {
         <Switch>
           <Route path="/" component={Fest} exact />
           <Route path="/direct" component={Direct} />
-          <Route path="/cart" component={Cart} />
+          <Route path="/cart/:id" component={Cart} />
         </Switch>
       </AppStyle>
     </Router>

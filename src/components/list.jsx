@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroller";
+import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
 import { getAxiosFilm } from "../server/serverFest";
 
