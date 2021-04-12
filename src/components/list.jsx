@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { newFilm } from "../reducers/actions";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroller";
 import { Link } from "react-router-dom";
@@ -112,7 +113,7 @@ const Up = styled.div`
 
 const Loading = styled.div``;
 
-const List = ({ fest, year, r1100, r780, r480 }) => {
+const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
   let loadingsB = r1100 ? 8 : r780 ? 6 : 4;
 
   const [items, setItems] = useState(null);
@@ -187,6 +188,7 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
         r480={r480 ? 1 : 0}
       >
         {items.map((item, index) => {
+          let link = `/${item.filmId}`;
           return (
             <Item
               key={`${item.filmId} + item.nameEn + ${index}`}
@@ -195,11 +197,12 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
             >
               <img src={item.posterUrlPreview} alt="img" />
               <ItemInfo
-                to={item.nameEn}
                 onClick={(e) => {
+                  newFilm(item);
+                  setHasMore(false);
                   e.stopPropagation();
-                  console.log(item.filmId);
                 }}
+                to={link}
               >
                 <div className="name">{item.nameRu}</div>
                 <div className="country">
@@ -231,4 +234,6 @@ const mapStateToProps = ({ responsive: { r1100, r780, r480 } }) => {
   return { r1100, r780, r480 };
 };
 
-export default connect(mapStateToProps)(List);
+const mapDispatchToProps = { newFilm };
+
+export default connect(mapStateToProps, mapDispatchToProps)(List);
