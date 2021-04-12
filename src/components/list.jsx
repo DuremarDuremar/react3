@@ -14,8 +14,8 @@ const Items = styled(InfiniteScroll)`
   ${(props) =>
     !props.r480 &&
     `
-    width: 220px;
-    height: 420px;
+    width: calc(60px + 40vw);
+    height: calc(250px + 50vw);
     margin: 50px auto;
     transform: rotate(10deg);
     cursor:pointer;
@@ -36,6 +36,11 @@ const Item = styled.div`
   position: relative;
   overflow: hidden;
   transition: 0.15s ease-in-out all;
+  :hover div {
+    border: 4px solid black;
+    box-shadow: inset -5px -5px 5px 0 rgba(0, 0, 0, 0.5),
+      inset 5px 5px 5px 0 rgba(255, 255, 255, 0.5);
+  }
   ${(props) =>
     props.r480 &&
     `
@@ -76,13 +81,14 @@ const Item = styled.div`
   `}
 
   img {
-    cursor: pointer;
     width: 100%;
     max-height: 500px;
   }
 `;
 
 const ItemInfo = styled(Link)`
+  cursor: pointer;
+  color: #fbfbfb;
   .name,
   .year {
     background-color: #b8860b;
