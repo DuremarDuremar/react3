@@ -6,7 +6,7 @@ const updateCart = (state, action) => {
     };
   }
 
-  console.log(state);
+  // console.log(state);
 
   switch (action.type) {
     case "FILM":

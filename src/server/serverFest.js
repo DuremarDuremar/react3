@@ -1,4 +1,5 @@
 import axios from "axios";
+import { uniq } from "lodash";
 
 const array = {
   Cannes2010s: [
@@ -166,4 +167,39 @@ export const getAxiosFilm = async (fest, year, itemsView, newId) => {
     .catch(function (err) {
       console.log(err);
     });
+};
+
+export const getAxiosFrame = async (id) => {
+  const res = await axios.get(
+    `https://kinopoiskapiunofficial.tech/api/v2.1/films/${id}/frames`,
+    {
+      method: "GET",
+      headers: {
+        "X-API-KEY": "3624a818-0f9b-4117-91dd-3f6624d9d171",
+      },
+    }
+  );
+
+  // const randomNumber = function (min, max) {
+  //   return Math.floor(Math.random() * (max - min + 1) + min);
+  // };
+
+  // console.log(randomNumber(0, res.data.frames.length));
+  // console.log(randomNumber(0, res.data.frames.length));
+
+  // const randomRepeat = (min, max, size) => {
+  //   let values = [];
+
+  //   while (values.length < size) {
+  //     values.push(Math.floor(Math.random() * (max - min + 1) + min));
+
+  //     values = uniq(values);
+  //   }
+
+  //   return values;
+  // };
+
+  // const array = randomRepeat(0, res.data.frames.length, 11);
+
+  return res.data.frames;
 };
