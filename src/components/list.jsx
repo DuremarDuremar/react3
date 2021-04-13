@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { newFilm } from "../reducers/actions";
 import styled from "styled-components";
-import InfiniteScroll from "react-infinite-scroller";
 import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
 import { getAxiosFilm } from "../server/serverFest";
 
-const Items = styled(InfiniteScroll)`
+const Items = styled.div`
   margin-top: 40px;
   display: ${(props) => (props.r480 ? "grid" : "div")};
   position: relative;
+  padding-bottom: 50px;
   ${(props) =>
     !props.r480 &&
     `
@@ -36,6 +36,7 @@ const Item = styled.div`
   position: relative;
   overflow: hidden;
   transition: 0.15s ease-in-out all;
+  z-index: 1;
   :hover div {
     border: 4px solid black;
     box-shadow: inset -5px -5px 5px 0 rgba(0, 0, 0, 0.5),
@@ -119,12 +120,24 @@ const Up = styled.div`
 
 const Loading = styled.div``;
 
+const Infiniti = styled.div`
+  width: 100%;
+  height: 70px;
+  position: absolute;
+  bottom: 0;
+  background-color: green;
+  opacity: 0.5;
+  cursor: wait;
+  z-index: 2;
+`;
+
 const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
   let loadingsB = r1100 ? 8 : r780 ? 6 : 4;
 
   const [items, setItems] = useState(null);
   const [itemsView, setItemsView] = useState([0, loadingsB]);
-  const [hasMore, setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(false);
+  const [axios, setAxios] = useState(true);
   const [counterA, setCounterA] = useState(0);
   const [counterB, setCounterB] = useState(1);
 
@@ -135,8 +148,25 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
   }, [items, r480]);
 
   useEffect(() => {
+    if (!r480) {
+      setItemsView([loadingsB + counterA, loadingsB + counterB]);
+    }
+  }, [counterA, counterB, loadingsB, r480]);
+
+  useEffect(() => {
+    if (hasMore) {
+      r480 &&
+        setItemsView((prevItemsView) => [
+          prevItemsView[1],
+          prevItemsView[1] + loadingsB,
+        ]);
+    }
+
+    setHasMore(false);
+  }, [hasMore]);
+
+  useEffect(() => {
     getAxiosFilm(fest, year, itemsView).then((response) => {
-      response.length < 1 && setHasMore(false);
       setItems((prevItems) => {
         let arr = !prevItems
           ? response
@@ -148,6 +178,7 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
             a.findIndex((t) => t.filmId === item.filmId) === index
         );
       });
+      response.length < 1 && setAxios(false);
     });
   }, [fest, year, itemsView, r480]);
 
@@ -160,39 +191,20 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
     }
   };
 
-  useEffect(() => {
-    if (!r480) {
-      setItemsView([loadingsB + counterA, loadingsB + counterB]);
-    } else {
-      setItemsView([loadingsB + counterA, loadingsB + counterB]);
-    }
-  }, [counterA, counterB, loadingsB, r480]);
+  const nextItems = (e) => {
+    setHasMore(true);
+    console.log(e);
+  };
 
   // console.log("counterA", counterA);
   // console.log("counterB", counterB);
   // console.log(items, "items");
   // console.log("itemsView", itemsView);
+  console.log("hasMore", hasMore);
 
   if (items) {
     return (
-      <Items
-        pageStart={items.length}
-        loadMore={() => {
-          r480 &&
-            setTimeout(() => {
-              setItemsView((prevItemsView) => [
-                prevItemsView[1],
-                prevItemsView[1] + loadingsB,
-              ]);
-            }, 1000);
-        }}
-        hasMore={hasMore}
-        loader={<Loading key={0}>Loading...</Loading>}
-        threshold={0}
-        r1100={r1100 ? 1 : 0}
-        r780={r780 ? 1 : 0}
-        r480={r480 ? 1 : 0}
-      >
+      <Items r1100={r1100 ? 1 : 0} r780={r780 ? 1 : 0} r480={r480 ? 1 : 0}>
         {items.map((item, index) => {
           let link = `/${item.filmId}`;
           return (
@@ -221,7 +233,7 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
             </Item>
           );
         })}
-        {!hasMore && r480 && (
+        {!axios && r480 && (
           <Up>
             <i
               className="fas fa-angle-double-up fa-4x"
@@ -229,6 +241,7 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
             ></i>
           </Up>
         )}
+        {axios && <Infiniti onMouseEnter={(e) => nextItems(e)}>66</Infiniti>}
       </Items>
     );
   } else {
