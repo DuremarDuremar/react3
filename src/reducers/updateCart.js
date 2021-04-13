@@ -2,6 +2,7 @@ const updateCart = (state, action) => {
   if (state === undefined) {
     return {
       film: null,
+      idItem: null,
     };
   }
 
@@ -12,6 +13,11 @@ const updateCart = (state, action) => {
       return {
         ...state.cart,
         film: action.payload,
+      };
+    case "ID":
+      return {
+        ...state.cart,
+        idItem: action.payload,
       };
     default:
       return state.cart;

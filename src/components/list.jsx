@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { newFilm } from "../reducers/actions";
+import { newFilm, newId } from "../reducers/actions";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
@@ -122,16 +122,16 @@ const Loading = styled.div``;
 
 const Infiniti = styled.div`
   width: 100%;
-  height: 70px;
+  height: 220px;
   position: absolute;
   bottom: 0;
-  background-color: green;
+  background-color: #2f3542;
   opacity: 0.5;
   cursor: wait;
   z-index: 2;
 `;
 
-const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
+const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
   let loadingsB = r1100 ? 8 : r780 ? 6 : 4;
 
   const [items, setItems] = useState(null);
@@ -161,12 +161,11 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
           prevItemsView[1] + loadingsB,
         ]);
     }
-
     setHasMore(false);
-  }, [hasMore]);
+  }, [hasMore, r480, loadingsB]);
 
   useEffect(() => {
-    getAxiosFilm(fest, year, itemsView).then((response) => {
+    getAxiosFilm(fest, year, itemsView, newId).then((response) => {
       setItems((prevItems) => {
         let arr = !prevItems
           ? response
@@ -180,7 +179,7 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
       });
       response.length < 1 && setAxios(false);
     });
-  }, [fest, year, itemsView, r480]);
+  }, [fest, year, itemsView, r480, newId]);
 
   const filter480 = (id) => {
     if (!r480) {
@@ -191,16 +190,12 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
     }
   };
 
-  const nextItems = (e) => {
-    setHasMore(true);
-    console.log(e);
-  };
-
   // console.log("counterA", counterA);
   // console.log("counterB", counterB);
   // console.log(items, "items");
   // console.log("itemsView", itemsView);
-  console.log("hasMore", hasMore);
+  // console.log("hasMore", hasMore);
+  // console.log("idItems", idItems);
 
   if (items) {
     return (
@@ -216,6 +211,7 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
               <img src={item.posterUrlPreview} alt="img" />
               <ItemInfo
                 onClick={(e) => {
+                  newId(idItem.filter((el) => el[0] === item.filmId));
                   newFilm(item);
                   setHasMore(false);
                   e.stopPropagation();
@@ -241,7 +237,7 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
             ></i>
           </Up>
         )}
-        {axios && <Infiniti onMouseEnter={(e) => nextItems(e)}>66</Infiniti>}
+        {axios && <Infiniti onMouseEnter={() => setHasMore(true)} />}
       </Items>
     );
   } else {
@@ -249,10 +245,13 @@ const List = ({ newFilm, fest, year, r1100, r780, r480 }) => {
   }
 };
 
-const mapStateToProps = ({ responsive: { r1100, r780, r480 } }) => {
-  return { r1100, r780, r480 };
+const mapStateToProps = ({
+  responsive: { r1100, r780, r480 },
+  cart: { idItem },
+}) => {
+  return { r1100, r780, r480, idItem };
 };
 
-const mapDispatchToProps = { newFilm };
+const mapDispatchToProps = { newFilm, newId };
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

@@ -7,10 +7,13 @@ const CartFilm = styled.div`
   min-height: 100vh;
 `;
 
-const Cart = ({ film }) => {
+const Cart = ({ film, idItem }) => {
   let { id } = useParams();
 
-  if (film) {
+  console.log("filmCart", film);
+  console.log("idItem", idItem);
+
+  if (film && idItem) {
     return (
       <CartFilm>
         <div>
@@ -28,8 +31,8 @@ const Cart = ({ film }) => {
   );
 };
 
-const mapStateToProps = ({ cart: { film } }) => {
-  return { film };
+const mapStateToProps = ({ cart: { film, idItem } }) => {
+  return { film, idItem };
 };
 
 export default connect(mapStateToProps)(Cart);
