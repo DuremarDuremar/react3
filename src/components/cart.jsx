@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect, useCallback } from "react";
 import { uniq } from "lodash";
-import { getAxiosFrame } from "../server/serverFest";
+import { getAxiosFrame, getAxiosFilm, array } from "../server/serverFest";
 import { useParams } from "react-router";
 import styled from "styled-components";
 
@@ -32,22 +31,46 @@ const Item = styled.div`
   }
 `;
 
-const Cart = ({ film, idItem }) => {
+const Cart = () => {
   let { id } = useParams();
 
   const [frame, setFrame] = useState(null);
+  const [film, setFilm] = useState(null);
+  const [direct, setDirect] = useState(null);
+
+  const directFind = useCallback(
+    (array) => {
+      const filmsArray = Object.values(array);
+      const resul = filmsArray.map((fest) => {
+        return fest.filter((item) => item.length > 1 && item[0] === Number(id));
+      });
+      return resul.flat(2);
+    },
+    [id]
+  );
+
   useEffect(() => {
     getAxiosFrame(id).then((response) => {
       setFrame(response);
     });
   }, [id]);
 
+  useEffect(() => {
+    getAxiosFilm(id).then((response) => {
+      setFilm(response);
+    });
+  }, [id]);
+
+  useEffect(() => {
+    setDirect(directFind(array));
+  }, [directFind]);
+
   // console.log(id);
   // console.log("filmCart", film);
   // console.log("idItem", idItem);
-  console.log(frame);
+  // console.log(direct);
 
-  if (film && idItem && frame) {
+  if (film && frame) {
     const randomRepeat = (min, max, size) => {
       let values = [];
 
@@ -60,16 +83,13 @@ const Cart = ({ film, idItem }) => {
       return values;
     };
 
-    const array = randomRepeat(0, frame.length - 3, 11);
-
-    console.log(array);
+    const arrayFrame = randomRepeat(0, frame.length - 3, 11);
 
     const frameItems = [...Array(11)].map((item, index) => {
       if (index !== 4) {
-        console.log(frame[Number(array[index])]);
         return (
           <Item key={index}>
-            <img src={frame[Number(array[index])].preview} alt="" />
+            <img src={frame[Number(arrayFrame[index])].preview} alt="" />
           </Item>
         );
       } else {
@@ -94,8 +114,4 @@ const Cart = ({ film, idItem }) => {
   );
 };
 
-const mapStateToProps = ({ cart: { film, idItem } }) => {
-  return { film, idItem };
-};
-
-export default connect(mapStateToProps)(Cart);
+export default Cart;

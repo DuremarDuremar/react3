@@ -4,7 +4,7 @@ import { newFilm, newId } from "../reducers/actions";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
-import { getAxiosFilm } from "../server/serverFest";
+import { getAxiosFilms } from "../server/serverFest";
 
 const Items = styled.div`
   margin-top: 40px;
@@ -165,7 +165,7 @@ const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
   }, [hasMore, r480, loadingsB]);
 
   useEffect(() => {
-    getAxiosFilm(fest, year, itemsView, newId).then((response) => {
+    getAxiosFilms(fest, year, itemsView, newId).then((response) => {
       setItems((prevItems) => {
         let arr = !prevItems
           ? response

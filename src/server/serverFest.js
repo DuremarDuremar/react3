@@ -1,7 +1,6 @@
 import axios from "axios";
-import { uniq } from "lodash";
 
-const array = {
+export const array = {
   Cannes2010s: [
     [1043758, 493688],
     [1169370, 817639],
@@ -139,7 +138,7 @@ const array = {
   ],
 };
 
-export const getAxiosFilm = async (fest, year, itemsView, newId) => {
+export const getAxiosFilms = async (fest, year, itemsView, newId) => {
   const listLink = `${fest + year}`;
 
   newId(array[listLink]);
@@ -167,6 +166,19 @@ export const getAxiosFilm = async (fest, year, itemsView, newId) => {
     .catch(function (err) {
       console.log(err);
     });
+};
+
+export const getAxiosFilm = async (id) => {
+  const res = await axios.get(
+    `https://kinopoiskapiunofficial.tech/api/v2.1/films/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "X-API-KEY": "3624a818-0f9b-4117-91dd-3f6624d9d171",
+      },
+    }
+  );
+  return res.data.data;
 };
 
 export const getAxiosFrame = async (id) => {
