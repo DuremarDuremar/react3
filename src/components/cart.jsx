@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { uniq } from "lodash";
-import { getAxiosFrame, getAxiosFilm, array } from "../server/serverFest";
+import {
+  getAxiosFrame,
+  getAxiosFilm,
+  getAxiosDirect,
+  array,
+} from "../server/serverFest";
 import { useParams } from "react-router";
 import styled from "styled-components";
 
@@ -37,6 +42,7 @@ const Cart = () => {
   const [frame, setFrame] = useState(null);
   const [film, setFilm] = useState(null);
   const [direct, setDirect] = useState(null);
+  const [directId, setDirectId] = useState(null);
 
   const directFind = useCallback(
     (array) => {
@@ -62,15 +68,27 @@ const Cart = () => {
   }, [id]);
 
   useEffect(() => {
-    setDirect(directFind(array));
+    setDirectId(directFind(array));
   }, [directFind]);
+
+  useEffect(() => {
+    if (directId) {
+      getAxiosDirect(directId[1]).then((response) => {
+        setDirect(response);
+      });
+    }
+  }, [directId]);
 
   // console.log(id);
   // console.log("filmCart", film);
   // console.log("idItem", idItem);
   // console.log(direct);
 
-  if (film && frame) {
+  console.log("direct", direct);
+  console.log("frame", frame);
+  console.log("film", film);
+
+  if (film && frame && direct) {
     const randomRepeat = (min, max, size) => {
       let values = [];
 
