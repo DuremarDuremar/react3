@@ -138,10 +138,8 @@ export const array = {
   ],
 };
 
-export const getAxiosFilms = async (fest, year, itemsView, newId) => {
+export const getAxiosFilms = async (fest, year, itemsView) => {
   const listLink = `${fest + year}`;
-
-  newId(array[listLink]);
 
   const listRes = await array[listLink]
     .slice(itemsView[0], itemsView[1])

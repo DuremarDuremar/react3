@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { newFilm, newId } from "../reducers/actions";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
@@ -131,7 +130,7 @@ const Infiniti = styled.div`
   z-index: 2;
 `;
 
-const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
+const List = ({ fest, year, r1100, r780, r480 }) => {
   let loadingsB = r1100 ? 8 : r780 ? 6 : 4;
 
   const [items, setItems] = useState(null);
@@ -165,7 +164,7 @@ const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
   }, [hasMore, r480, loadingsB]);
 
   useEffect(() => {
-    getAxiosFilms(fest, year, itemsView, newId).then((response) => {
+    getAxiosFilms(fest, year, itemsView).then((response) => {
       setItems((prevItems) => {
         let arr = !prevItems
           ? response
@@ -179,7 +178,7 @@ const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
       });
       response.length < 1 && setAxios(false);
     });
-  }, [fest, year, itemsView, r480, newId]);
+  }, [fest, year, itemsView, r480]);
 
   const filter480 = (id) => {
     if (!r480) {
@@ -211,8 +210,6 @@ const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
               <img src={item.posterUrlPreview} alt="img" />
               <ItemInfo
                 onClick={(e) => {
-                  newId(idItem.filter((el) => el[0] === item.filmId));
-                  newFilm(item);
                   setHasMore(false);
                   e.stopPropagation();
                 }}
@@ -245,13 +242,8 @@ const List = ({ newFilm, newId, idItem, fest, year, r1100, r780, r480 }) => {
   }
 };
 
-const mapStateToProps = ({
-  responsive: { r1100, r780, r480 },
-  cart: { idItem },
-}) => {
-  return { r1100, r780, r480, idItem };
+const mapStateToProps = ({ responsive: { r1100, r780, r480 } }) => {
+  return { r1100, r780, r480 };
 };
 
-const mapDispatchToProps = { newFilm, newId };
-
-export default connect(mapStateToProps, mapDispatchToProps)(List);
+export default connect(mapStateToProps)(List);

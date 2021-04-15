@@ -26,11 +26,4 @@ const newFilm = (film) => {
   };
 };
 
-const newId = (id) => {
-  return {
-    type: "ID",
-    payload: id,
-  };
-};
-
-export { res1100, res780, res480, newFilm, newId };
+export { res1100, res780, res480, newFilm };
