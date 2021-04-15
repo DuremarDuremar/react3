@@ -7,30 +7,44 @@ import {
   array,
 } from "../server/serverFest";
 import { useParams } from "react-router";
+import rama from "../images/rama.png";
 import styled from "styled-components";
 
 const CartFilm = styled.div`
   /* min-height: 100vh; */
   padding: 20px;
   max-width: 1366px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
 `;
 
 const CartFrame = styled.div`
-  margin-top: 100px;
+  transform: translateX(90%);
+  padding-top: 250px;
   height: 500px;
   width: 300px;
   background-color: #fff;
-  position: relative;
+  position: absolute;
+  right: 0;
   border-top: 10px solid black;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: pointer;
+  transition: all 0.8s linear;
+  z-index: 1;
+
+  :hover {
+    transform: translateX(0);
+  }
   :after {
     content: "";
     width: 30px;
-    height: 1180px;
+    height: 1190px;
     display: block;
     background: linear-gradient(
       to top,
@@ -84,7 +98,7 @@ const CartFrame = styled.div`
   :before {
     content: "";
     width: 30px;
-    height: 1180px;
+    height: 1190px;
     display: block;
     background: linear-gradient(
       to top,
@@ -137,14 +151,57 @@ const CartFrame = styled.div`
 `;
 
 const Item = styled.div`
-  max-width: 200px;
-  /* max-height: 600px; */
+  width: 170px;
+  :hover {
+    transform: scale(2);
+    z-index: 2;
+  }
+
   :first-child {
-    padding-top: 365px;
+    :hover {
+      padding-top: 20px;
+    }
   }
   img {
     width: 100%;
     /* max-height: 100%; */
+  }
+`;
+
+const CartPoster = styled.div`
+  max-width: 360px;
+  max-height: 700px;
+  border: 5vw solid transparent;
+  border-image: url(${rama}) 25% round;
+  img {
+    max-width: 100%;
+  }
+`;
+
+const CartInfo = styled.div`
+  padding-left: 100px;
+  color: #dfe4ea;
+`;
+
+const CartName = styled.div`
+  p {
+    :first-child {
+      font-size: 30px;
+    }
+    :last-child {
+      position: relative;
+    }
+
+    :last-child:after {
+      content: "";
+      width: 100%;
+      position: absolute;
+      bottom: -50%;
+      left: 20%;
+      height: 2px;
+      display: block;
+      background-color: #dfe4ea;
+    }
   }
 `;
 
@@ -196,9 +253,9 @@ const Cart = () => {
   // console.log("idItem", idItem);
   // console.log(direct);
 
-  // console.log("direct", direct);
-  // console.log("frame", frame);
-  // console.log("film", film);
+  console.log("direct", direct);
+  console.log("frame", frame);
+  console.log("film", film);
 
   if (film && frame && direct) {
     const randomRepeat = (min, max, size) => {
@@ -218,7 +275,7 @@ const Cart = () => {
     const frameItems = [...Array(8)].map((item, index) => {
       return (
         <Item key={index}>
-          <img src={frame[Number(arrayFrame[index])].preview} alt="" />
+          <img src={frame[Number(arrayFrame[index])].preview} alt="img" />
         </Item>
       );
     });
@@ -226,6 +283,15 @@ const Cart = () => {
     return (
       <CartFilm>
         <CartFrame>{frameItems}</CartFrame>
+        <CartPoster>
+          <img src={film.posterUrlPreview} alt="img" />
+        </CartPoster>
+        <CartInfo>
+          <CartName>
+            <p>{film.nameRu}</p>
+            <p>{film.nameEn}</p>
+          </CartName>
+        </CartInfo>
       </CartFilm>
     );
   }
