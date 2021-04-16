@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { uniq } from "lodash";
 import {
   getAxiosFrame,
   getAxiosFilm,
@@ -12,7 +11,7 @@ import styled from "styled-components";
 
 const CartFilm = styled.div`
   /* min-height: 100vh; */
-  padding: 20px;
+  padding: 30px 20px;
   max-width: 1366px;
   display: flex;
   overflow: hidden;
@@ -21,7 +20,7 @@ const CartFilm = styled.div`
 
 const CartFrame = styled.div`
   transform: translateX(90%);
-  padding-top: 250px;
+  padding-top: 240px;
   height: 500px;
   width: 300px;
   background-color: #fff;
@@ -40,6 +39,7 @@ const CartFrame = styled.div`
 
   :hover {
     transform: translateX(0);
+    position: fixed;
   }
   :after {
     content: "";
@@ -152,6 +152,7 @@ const CartFrame = styled.div`
 
 const Item = styled.div`
   width: 170px;
+  max-height: 250px;
   :hover {
     transform: scale(2);
     z-index: 2;
@@ -159,7 +160,7 @@ const Item = styled.div`
 
   :first-child {
     :hover {
-      padding-top: 20px;
+      padding-top: 40px;
     }
   }
   img {
@@ -169,18 +170,21 @@ const Item = styled.div`
 `;
 
 const CartPoster = styled.div`
-  max-width: 360px;
-  max-height: 700px;
-  border: 5vw solid transparent;
-  border-image: url(${rama}) 25% round;
+  max-width: 100%;
+  max-height: 100%;
+
   img {
     max-width: 100%;
+    min-width: 180px;
+    border: 3vw solid transparent;
+    border-image: url(${rama}) 25% round;
   }
 `;
 
 const CartInfo = styled.div`
   padding-left: 100px;
   color: #dfe4ea;
+  width: 300px;
 `;
 
 const CartName = styled.div`
@@ -202,6 +206,48 @@ const CartName = styled.div`
       display: block;
       background-color: #dfe4ea;
     }
+  }
+`;
+
+const CartYear = styled.div`
+  padding-top: 20px;
+  text-align: right;
+  div {
+    padding-top: 5px;
+    font-size: 22px;
+    position: relative;
+    :after {
+      content: "";
+      width: 100%;
+      position: absolute;
+      bottom: -50%;
+      right: 20%;
+      height: 2px;
+      display: block;
+      background-color: #dfe4ea;
+    }
+  }
+`;
+
+const CartPerson = styled.div`
+  max-width: 200px;
+  margin: 40px auto 0;
+  p {
+    text-align: center;
+    /* border-radius: 25%; */
+    background-color: black;
+    :first-child {
+      border-top: 3px solid black;
+    }
+    :last-child {
+      border-bottom: 3px solid black;
+    }
+  }
+  img {
+    max-width: 100%;
+    min-width: 50px;
+    border-radius: 25%;
+    box-shadow: 0 0 0 2px #b8860b;
   }
 `;
 
@@ -257,32 +303,24 @@ const Cart = () => {
   console.log("frame", frame);
   console.log("film", film);
 
-  if (film && frame && direct) {
-    const randomRepeat = (min, max, size) => {
-      let values = [];
+  if (film && direct) {
+    const frameItems = () => {
+      if (frame) {
+        const lengthFrame = frame.length > 8 ? 8 : frame.length;
 
-      while (values.length < size) {
-        values.push(Math.floor(Math.random() * (max - min + 1) + min));
-
-        values = uniq(values);
+        return [...Array(lengthFrame)].map((item, index) => {
+          return (
+            <Item key={index}>
+              <img src={frame[index].image} alt="img" />
+            </Item>
+          );
+        });
       }
-
-      return values;
     };
-
-    const arrayFrame = randomRepeat(0, frame.length - 3, 8);
-
-    const frameItems = [...Array(8)].map((item, index) => {
-      return (
-        <Item key={index}>
-          <img src={frame[Number(arrayFrame[index])].preview} alt="img" />
-        </Item>
-      );
-    });
 
     return (
       <CartFilm>
-        <CartFrame>{frameItems}</CartFrame>
+        <CartFrame>{frameItems()}</CartFrame>
         <CartPoster>
           <img src={film.posterUrlPreview} alt="img" />
         </CartPoster>
@@ -291,6 +329,17 @@ const Cart = () => {
             <p>{film.nameRu}</p>
             <p>{film.nameEn}</p>
           </CartName>
+          <CartYear>
+            {film.countries.map((item, index) =>
+              index < 2 ? <span key={index}>{item.country} </span> : null
+            )}
+            <div>{film.year}</div>
+          </CartYear>
+          <CartPerson>
+            <p>{direct.nameRu}</p>
+            <img src={direct.posterUrl} alt="person" />
+            <p>{direct.nameEn}</p>
+          </CartPerson>
         </CartInfo>
       </CartFilm>
     );
