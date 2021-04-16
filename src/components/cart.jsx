@@ -5,14 +5,30 @@ import {
   getAxiosDirect,
   array,
 } from "../server/serverFest";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import rama from "../images/rama.png";
 import styled from "styled-components";
 
-const CartFilm = styled.div`
-  /* min-height: 100vh; */
-  padding: 30px 20px;
+const Wrapper = styled.div`
+  padding: 20px;
   max-width: 1366px;
+`;
+
+const CartRouting = styled.div`
+  i {
+    transition: all ease-out 0.35s;
+    color: #fff;
+    cursor: pointer;
+    :hover {
+      color: #b8860b;
+    }
+  }
+`;
+
+const CartFilm = styled.div`
+  min-height: 100vh;
+  padding-top: 15px;
   display: flex;
   overflow: hidden;
   position: relative;
@@ -20,18 +36,17 @@ const CartFilm = styled.div`
 
 const CartFrame = styled.div`
   transform: translateX(90%);
-  padding-top: 240px;
-  height: 500px;
-  width: 300px;
+  height: 300px;
+  width: 200px;
   background-color: #fff;
   position: absolute;
+  top: 0;
   right: 0;
   border-top: 10px solid black;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   cursor: pointer;
   transition: all 0.8s linear;
@@ -39,12 +54,15 @@ const CartFrame = styled.div`
 
   :hover {
     transform: translateX(0);
-    position: fixed;
+    /* position: fixed; */
+    /* top: 10%; */
+    /* height: 500px; */
+    width: 300px;
   }
   :after {
     content: "";
     width: 30px;
-    height: 1190px;
+    height: 1180px;
     display: block;
     background: linear-gradient(
       to top,
@@ -98,7 +116,7 @@ const CartFrame = styled.div`
   :before {
     content: "";
     width: 30px;
-    height: 1190px;
+    height: 1180px;
     display: block;
     background: linear-gradient(
       to top,
@@ -152,19 +170,20 @@ const CartFrame = styled.div`
 
 const Item = styled.div`
   width: 170px;
-  max-height: 250px;
+  max-height: 210px;
   :hover {
     transform: scale(2);
     z-index: 2;
   }
 
   :first-child {
+    padding-top: 10px;
     :hover {
       padding-top: 40px;
     }
   }
   img {
-    width: 100%;
+    max-width: 100%;
     /* max-height: 100%; */
   }
 `;
@@ -233,14 +252,14 @@ const CartPerson = styled.div`
   max-width: 200px;
   margin: 40px auto 0;
   p {
-    text-align: center;
-    /* border-radius: 25%; */
-    background-color: black;
-    :first-child {
-      border-top: 3px solid black;
-    }
+    font-size: 20px;
+    text-align: left;
+    color: #fff;
+    border-bottom: 2px solid #fff;
     :last-child {
-      border-bottom: 3px solid black;
+      padding-top: 10px;
+      text-align: right;
+      border-bottom: none;
     }
   }
   img {
@@ -319,29 +338,36 @@ const Cart = () => {
     };
 
     return (
-      <CartFilm>
-        <CartFrame>{frameItems()}</CartFrame>
-        <CartPoster>
-          <img src={film.posterUrlPreview} alt="img" />
-        </CartPoster>
-        <CartInfo>
-          <CartName>
-            <p>{film.nameRu}</p>
-            <p>{film.nameEn}</p>
-          </CartName>
-          <CartYear>
-            {film.countries.map((item, index) =>
-              index < 2 ? <span key={index}>{item.country} </span> : null
-            )}
-            <div>{film.year}</div>
-          </CartYear>
-          <CartPerson>
-            <p>{direct.nameRu}</p>
-            <img src={direct.posterUrl} alt="person" />
-            <p>{direct.nameEn}</p>
-          </CartPerson>
-        </CartInfo>
-      </CartFilm>
+      <Wrapper>
+        <CartRouting>
+          <Link to="/">
+            <i className="fas fa-reply fa-4x"></i>
+          </Link>
+        </CartRouting>
+        <CartFilm>
+          <CartFrame>{frameItems()}</CartFrame>
+          <CartPoster>
+            <img src={film.posterUrlPreview} alt="img" />
+          </CartPoster>
+          <CartInfo>
+            <CartName>
+              <p>{film.nameRu}</p>
+              <p>{film.nameEn}</p>
+            </CartName>
+            <CartYear>
+              {film.countries.map((item, index) =>
+                index < 2 ? <span key={index}>{item.country} </span> : null
+              )}
+              <div>{film.year}</div>
+            </CartYear>
+            <CartPerson>
+              <img src={direct.posterUrl} alt="person" />
+              <p>{direct.nameRu}</p>
+              <p>{direct.nameEn}</p>
+            </CartPerson>
+          </CartInfo>
+        </CartFilm>
+      </Wrapper>
     );
   }
   return (
