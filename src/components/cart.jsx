@@ -5,7 +5,7 @@ import {
   getAxiosDirect,
   array,
 } from "../server/serverFest";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useParams } from "react-router";
 import rama from "../images/rama.png";
 import styled from "styled-components";
@@ -16,6 +16,8 @@ const Wrapper = styled.div`
 `;
 
 const CartRouting = styled.div`
+  display: flex;
+  justify-content: space-between;
   i {
     transition: all ease-out 0.35s;
     color: #fff;
@@ -25,6 +27,8 @@ const CartRouting = styled.div`
     }
   }
 `;
+
+const CartSlider = styled.div``;
 
 const CartFilm = styled.div`
   min-height: 100vh;
@@ -277,6 +281,7 @@ const Cart = () => {
   const [film, setFilm] = useState(null);
   const [direct, setDirect] = useState(null);
   const [directId, setDirectId] = useState(null);
+  const [newId, setNewId] = useState(false);
 
   const directFind = useCallback(
     (array) => {
@@ -288,6 +293,25 @@ const Cart = () => {
     },
     [id]
   );
+
+  const SliderCart = () => {
+    const filmsArray = Object.values(array).flat(1);
+
+    const filmsIndex = filmsArray.map((item, index) => {
+      if (item.length > 1 && item[0] === Number(id)) {
+        return index;
+      } else {
+        return null;
+      }
+    });
+    const filmIndex = filmsIndex.filter((item) => item);
+    const res = filmsArray.filter(
+      (item, index) => index === Number(filmIndex) + 1 && item
+    );
+    setNewId(
+      (prewNewId) => prewNewId !== String(res[0][0]) && String(res[0][0])
+    );
+  };
 
   useEffect(() => {
     getAxiosFrame(id).then((response) => {
@@ -313,14 +337,15 @@ const Cart = () => {
     }
   }, [directId]);
 
-  // console.log(id);
+  console.log(id);
+  console.log(String(newId));
   // console.log("filmCart", film);
   // console.log("idItem", idItem);
   // console.log(direct);
 
-  console.log("direct", direct);
-  console.log("frame", frame);
-  console.log("film", film);
+  // console.log("direct", direct);
+  // console.log("frame", frame);
+  // console.log("film", film);
 
   if (film && direct) {
     const frameItems = () => {
@@ -337,12 +362,23 @@ const Cart = () => {
       }
     };
 
+    if (newId) {
+      return <Redirect to={`/${newId}`} />;
+    }
+
     return (
       <Wrapper>
         <CartRouting>
           <Link to="/">
             <i className="fas fa-reply fa-4x"></i>
           </Link>
+          <CartSlider>
+            <i className="fas fa-arrow-circle-left fa-2x"></i>
+            <i
+              className="fas fa-arrow-circle-right fa-2x"
+              onClick={() => SliderCart()}
+            ></i>
+          </CartSlider>
         </CartRouting>
         <CartFilm>
           <CartFrame>{frameItems()}</CartFrame>
