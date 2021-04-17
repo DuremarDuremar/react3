@@ -5,7 +5,7 @@ import {
   getAxiosDirect,
   array,
 } from "../server/serverFest";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import rama from "../images/rama.png";
 import styled from "styled-components";
@@ -281,7 +281,6 @@ const Cart = () => {
   const [film, setFilm] = useState(null);
   const [direct, setDirect] = useState(null);
   const [directId, setDirectId] = useState(null);
-  const [newId, setNewId] = useState(false);
 
   const directFind = useCallback(
     (array) => {
@@ -294,7 +293,7 @@ const Cart = () => {
     [id]
   );
 
-  const SliderCart = () => {
+  const SliderCart = (string) => {
     const filmsArray = Object.values(array).flat(1);
 
     const filmsIndex = filmsArray.map((item, index) => {
@@ -305,12 +304,18 @@ const Cart = () => {
       }
     });
     const filmIndex = filmsIndex.filter((item) => item);
-    const res = filmsArray.filter(
-      (item, index) => index === Number(filmIndex) + 1 && item
-    );
-    setNewId(
-      (prewNewId) => prewNewId !== String(res[0][0]) && String(res[0][0])
-    );
+    const resNext = filmsArray
+      .filter((item, index) => index === Number(filmIndex) + 1 && item)[0][0]
+      .toString();
+    const resPrev = filmsArray
+      .filter((item, index) => index === Number(filmIndex) - 1 && item)[0][0]
+      .toString();
+
+    if (string === "next") {
+      return `/${resNext}`;
+    } else {
+      return `/${resPrev}`;
+    }
   };
 
   useEffect(() => {
@@ -338,7 +343,7 @@ const Cart = () => {
   }, [directId]);
 
   console.log(id);
-  console.log(String(newId));
+
   // console.log("filmCart", film);
   // console.log("idItem", idItem);
   // console.log(direct);
@@ -362,10 +367,6 @@ const Cart = () => {
       }
     };
 
-    if (newId) {
-      return <Redirect to={`/${newId}`} />;
-    }
-
     return (
       <Wrapper>
         <CartRouting>
@@ -373,11 +374,13 @@ const Cart = () => {
             <i className="fas fa-reply fa-4x"></i>
           </Link>
           <CartSlider>
-            <i className="fas fa-arrow-circle-left fa-2x"></i>
-            <i
-              className="fas fa-arrow-circle-right fa-2x"
-              onClick={() => SliderCart()}
-            ></i>
+            <Link to={SliderCart("prev")}>
+              <i className="fas fa-arrow-circle-left fa-2x"></i>
+            </Link>
+
+            <Link to={SliderCart("next")}>
+              <i className="fas fa-arrow-circle-right fa-2x"></i>
+            </Link>
           </CartSlider>
         </CartRouting>
         <CartFilm>
