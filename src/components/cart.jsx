@@ -308,8 +308,16 @@ const Cart = () => {
       .filter((item, index) => index === Number(filmIndex) + 1 && item)[0][0]
       .toString();
     const resPrev = filmsArray
-      .filter((item, index) => index === Number(filmIndex) - 1 && item)[0][0]
+      .filter((item, index) => {
+        if (index === Number(filmIndex) - 1) {
+          return item;
+        } else if (Number(filmIndex) === 0) {
+          return filmsArray[0];
+        }
+      })[0][0]
       .toString();
+
+    console.log("resPrev", filmsIndex);
 
     if (string === "next") {
       return `/${resNext}`;
@@ -342,7 +350,7 @@ const Cart = () => {
     }
   }, [directId]);
 
-  console.log(id);
+  console.log("id", id);
 
   // console.log("filmCart", film);
   // console.log("idItem", idItem);
