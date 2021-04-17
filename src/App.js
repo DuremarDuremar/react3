@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { res1100, res780, res480 } from "./reducers/actions";
+import { res1300, res1100, res780, res480 } from "./reducers/actions";
 import { connect } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -50,16 +50,27 @@ const AppStyle = styled.div`
   font-family: "Yatra One", cursive;
 `;
 
-const App = ({ res1100, res780, res480 }) => {
+const App = ({ res1300, res1100, res780, res480 }) => {
+  const responce1300 = useMediaQuery({ query: "(min-width: 1300px)" });
   const responce1100 = useMediaQuery({ query: "(min-width: 1100px)" });
   const responce780 = useMediaQuery({ query: "(min-width: 780px)" });
   const responce480 = useMediaQuery({ query: "(min-width: 480px)" });
 
   useEffect(() => {
+    res1300(responce1300);
     res1100(responce1100);
     res780(responce780);
     res480(responce480);
-  }, [responce1100, res1100, responce780, res780, responce480, res480]);
+  }, [
+    responce1300,
+    res1300,
+    responce1100,
+    res1100,
+    responce780,
+    res780,
+    responce480,
+    res480,
+  ]);
 
   return (
     <Router>
@@ -75,6 +86,6 @@ const App = ({ res1100, res780, res480 }) => {
   );
 };
 
-const mapDispatchToProps = { res1100, res780, res480 };
+const mapDispatchToProps = { res1300, res1100, res780, res480 };
 
 export default connect(null, mapDispatchToProps)(App);

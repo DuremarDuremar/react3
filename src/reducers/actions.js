@@ -1,3 +1,9 @@
+const res1300 = (res) => {
+  return {
+    type: "1300",
+    payload: res,
+  };
+};
 const res1100 = (res) => {
   return {
     type: "1100",
@@ -26,4 +32,4 @@ const newFilm = (film) => {
   };
 };
 
-export { res1100, res780, res480, newFilm };
+export { res1300, res1100, res780, res480, newFilm };

@@ -6,6 +6,7 @@ import {
   array,
 } from "../server/serverFest";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 import { useParams } from "react-router";
 import rama from "../images/rama.png";
 import styled from "styled-components";
@@ -31,15 +32,17 @@ const CartRouting = styled.div`
 const CartSlider = styled.div``;
 
 const CartFilm = styled.div`
+  display: ${(props) => (props.r780 ? "flex" : "block")};
   min-height: 100vh;
   padding-top: 15px;
-  display: flex;
+  /* display: flex; */
   overflow: hidden;
   position: relative;
 `;
 
 const CartFrame = styled.div`
-  transform: translateX(90%);
+  transform: ${(props) => !props.r1300 && "translateX(90%)"};
+  /* transform: translateX(90%); */
   height: 300px;
   width: 200px;
   background-color: #fff;
@@ -195,9 +198,10 @@ const Item = styled.div`
 const CartPoster = styled.div`
   max-width: 100%;
   max-height: 100%;
-
+  text-align: center;
   img {
-    max-width: 100%;
+    /* max-width: 100%; */
+    max-width: ${(props) => !props.r1100 && "280px"};
     min-width: 180px;
     border: 3vw solid transparent;
     border-image: url(${rama}) 25% round;
@@ -207,7 +211,10 @@ const CartPoster = styled.div`
 const CartInfo = styled.div`
   padding-left: 100px;
   color: #dfe4ea;
-  width: 300px;
+  /* width: 300px; */
+  width: ${(props) => (props.r1100 ? "300px" : "220px")};
+  text-align: center;
+  margin: ${(props) => !props.r780 && "30px auto 0"};
 `;
 
 const CartName = styled.div`
@@ -267,14 +274,15 @@ const CartPerson = styled.div`
     }
   }
   img {
-    max-width: 100%;
+    max-width: ${(props) => (props.r1100 ? "100%" : "140px")};
+    /* max-width: 100%; */
     min-width: 50px;
     border-radius: 25%;
     box-shadow: 0 0 0 2px #b8860b;
   }
 `;
 
-const Cart = () => {
+const Cart = ({ r1300, r1100, r780, r480 }) => {
   let { id } = useParams();
 
   const [frame, setFrame] = useState(null);
@@ -313,11 +321,11 @@ const Cart = () => {
           return item;
         } else if (Number(filmIndex) === 0) {
           return filmsArray[0];
+        } else {
+          return null;
         }
       })[0][0]
       .toString();
-
-    console.log("resPrev", filmsIndex);
 
     if (string === "next") {
       return `/${resNext}`;
@@ -350,11 +358,9 @@ const Cart = () => {
     }
   }, [directId]);
 
-  console.log("id", id);
+  // console.log("id", id);
 
-  // console.log("filmCart", film);
-  // console.log("idItem", idItem);
-  // console.log(direct);
+  console.log(r1300);
 
   // console.log("direct", direct);
   // console.log("frame", frame);
@@ -391,12 +397,12 @@ const Cart = () => {
             </Link>
           </CartSlider>
         </CartRouting>
-        <CartFilm>
-          <CartFrame>{frameItems()}</CartFrame>
-          <CartPoster>
+        <CartFilm r780={r780}>
+          <CartFrame r1300={r1300}>{frameItems()}</CartFrame>
+          <CartPoster r1100={r1100}>
             <img src={film.posterUrlPreview} alt="img" />
           </CartPoster>
-          <CartInfo>
+          <CartInfo r1100={r1100} r780={r780}>
             <CartName>
               <p>{film.nameRu}</p>
               <p>{film.nameEn}</p>
@@ -407,7 +413,7 @@ const Cart = () => {
               )}
               <div>{film.year}</div>
             </CartYear>
-            <CartPerson>
+            <CartPerson r1100={r1100}>
               <img src={direct.posterUrl} alt="person" />
               <p>{direct.nameRu}</p>
               <p>{direct.nameEn}</p>
@@ -424,4 +430,8 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+const mapStateToProps = ({ responsive: { r1300, r1100, r780, r480 } }) => {
+  return { r1300, r1100, r780, r480 };
+};
+
+export default connect(mapStateToProps)(Cart);

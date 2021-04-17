@@ -1,6 +1,7 @@
 const updateResponsive = (state, action) => {
   if (state === undefined) {
     return {
+      r1300: true,
       r1100: true,
       r780: true,
       r480: true,
@@ -8,6 +9,11 @@ const updateResponsive = (state, action) => {
   }
 
   switch (action.type) {
+    case "1300":
+      return {
+        ...state.responsive,
+        r1300: action.payload,
+      };
     case "1100":
       return {
         ...state.responsive,
