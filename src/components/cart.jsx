@@ -199,20 +199,32 @@ const CartPoster = styled.div`
   max-width: 100%;
   max-height: 100%;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   img {
     /* max-width: 100%; */
-    max-width: ${(props) => !props.r1100 && "280px"};
-    min-width: 180px;
+    max-width: ${(props) =>
+      props.r1100 ? "100%" : props.r480 ? "280px" : "210px"};
+    min-width: ${(props) => (props.r480 ? "180px" : "100px")};
+    /* min-width: 180px; */
     border: 3vw solid transparent;
     border-image: url(${rama}) 25% round;
+  }
+  i {
+    color: #fff;
+    cursor: pointer;
+    transition: all ease-out 0.35s;
+    :hover {
+      color: #b8860b;
+    }
   }
 `;
 
 const CartInfo = styled.div`
-  padding-left: 100px;
+  padding-left: ${(props) => props.r780 && "100px"};
   color: #dfe4ea;
-  /* width: 300px; */
-  width: ${(props) => (props.r1100 ? "300px" : "220px")};
+  width: ${(props) => (props.r1100 ? "300px" : props.r480 ? "220px" : "100%")};
   text-align: center;
   margin: ${(props) => !props.r780 && "30px auto 0"};
 `;
@@ -289,6 +301,7 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
   const [film, setFilm] = useState(null);
   const [direct, setDirect] = useState(null);
   const [directId, setDirectId] = useState(null);
+  const [num480, setNum480] = useState(0);
 
   const directFind = useCallback(
     (array) => {
@@ -360,7 +373,7 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
 
   // console.log("id", id);
 
-  console.log(r1300);
+  // console.log(r1300);
 
   // console.log("direct", direct);
   // console.log("frame", frame);
@@ -370,7 +383,6 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
     const frameItems = () => {
       if (frame) {
         const lengthFrame = frame.length > 8 ? 8 : frame.length;
-
         return [...Array(lengthFrame)].map((item, index) => {
           return (
             <Item key={index}>
@@ -380,6 +392,22 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
         });
       }
     };
+    const slide480 = (num) => {
+      if (frame) {
+        const res = [...Array(8)].map((item, index) => {
+          return <img key={index} src={frame[index].image} alt="img" />;
+        });
+        return res.filter((item, index) => index === num);
+      }
+    };
+
+    // [
+    //   film.posterUrlPreview,
+    //   frame[0].image,
+    //   frame[1].image,
+    //   frame[2].image,
+    // ];
+    // console.log(ff);
 
     return (
       <Wrapper>
@@ -398,11 +426,29 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
           </CartSlider>
         </CartRouting>
         <CartFilm r780={r780}>
-          <CartFrame r1300={r1300}>{frameItems()}</CartFrame>
-          <CartPoster r1100={r1100}>
-            <img src={film.posterUrlPreview} alt="img" />
+          {r480 && <CartFrame r1300={r1300}>{frameItems()}</CartFrame>}
+          <CartPoster r1100={r1100} r480={r480}>
+            {r480 ? (
+              <img src={film.posterUrlPreview} alt="img" />
+            ) : (
+              <>
+                <i
+                  className="fas fa-caret-left fa-4x"
+                  onClick={() =>
+                    setNum480((prevNum) => (prevNum > 0 ? num480 - 1 : 7))
+                  }
+                ></i>
+                {slide480(num480)}
+                <i
+                  className="fas fa-caret-right fa-4x"
+                  onClick={() =>
+                    setNum480((prevNum) => (prevNum < 7 ? num480 + 1 : 0))
+                  }
+                ></i>
+              </>
+            )}
           </CartPoster>
-          <CartInfo r1100={r1100} r780={r780}>
+          <CartInfo r1100={r1100} r780={r780} r480={r480}>
             <CartName>
               <p>{film.nameRu}</p>
               <p>{film.nameEn}</p>
