@@ -338,7 +338,15 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
     });
     const filmIndex = filmsIndex.filter((item) => item);
     const resNext = filmsArray
-      .filter((item, index) => index === Number(filmIndex) + 1 && item)[0][0]
+      .filter((item, index) => {
+        if (index === Number(filmIndex) + 1) {
+          return item;
+        } else if (Number(filmIndex) === filmsArray.length - 1) {
+          return filmsArray[filmsArray.length - 1];
+        } else {
+          return null;
+        }
+      })[0][0]
       .toString();
     const resPrev = filmsArray
       .filter((item, index) => {
