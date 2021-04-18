@@ -36,16 +36,17 @@ const Item = styled.div`
   overflow: hidden;
   transition: 0.15s ease-in-out all;
   z-index: 1;
-  :hover div {
-    border: 4px solid black;
-    box-shadow: inset -5px -5px 5px 0 rgba(0, 0, 0, 0.5),
-      inset 5px 5px 5px 0 rgba(255, 255, 255, 0.5);
-  }
+
   ${(props) =>
     props.r480 &&
     `
   :hover{
     transform: scale(1.04) 
+  }
+  :hover div {
+    border: 4px solid black;
+    box-shadow: inset -5px -5px 5px 0 rgba(0, 0, 0, 0.5),
+      inset 5px 5px 5px 0 rgba(255, 255, 255, 0.5);
   }
   `}
   ${(props) =>
@@ -77,6 +78,11 @@ const Item = styled.div`
     height: 55px;
     transform: rotate(-8deg) translate3d(0, 0, 0);
     background-color: #b8860b;
+  }
+  div {
+    border: 4px solid black;
+    box-shadow: inset -5px -5px 5px 0 rgba(0, 0, 0, 0.5),
+      inset 5px 5px 5px 0 rgba(255, 255, 255, 0.5);
   }
   `}
 
@@ -234,7 +240,7 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
             ></i>
           </Up>
         )}
-        {axios && <Infiniti onMouseEnter={() => setHasMore(true)} />}
+        {axios && r480 && <Infiniti onMouseEnter={() => setHasMore(true)} />}
       </Items>
     );
   } else {
