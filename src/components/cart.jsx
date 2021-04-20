@@ -284,25 +284,42 @@ const CartYear = styled.div`
 `;
 
 const CartPerson = styled.div`
-  max-width: 200px;
+  max-width: 400px;
   margin: 40px auto 0;
+  position: relative;
   p {
-    font-size: 20px;
+    white-space: nowrap;
+    font-size: 19px;
     text-align: left;
     color: #fff;
     border-bottom: 2px solid #fff;
     :last-child {
+      font-size: 14px;
       padding-top: 10px;
       text-align: right;
       border-bottom: none;
     }
   }
+
   img {
-    max-width: ${(props) => (props.r1100 ? "100%" : "140px")};
+    max-width: ${(props) => (props.r1100 ? "240px" : "140px")};
     /* max-width: 100%; */
     min-width: 50px;
     border-radius: 25%;
     box-shadow: 0 0 0 2px #b8860b;
+  }
+  .imgOne {
+    z-index: 1;
+    position: relative;
+  }
+  .imgTwo {
+    position: absolute;
+    left: ${(props) => (props.r480 ? "50%" : "40%")};
+    top: 0;
+    display: block;
+    :hover {
+      z-index: 2;
+    }
   }
 `;
 
@@ -312,8 +329,12 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
   const [frame, setFrame] = useState(null);
   const [film, setFilm] = useState(null);
   const [direct, setDirect] = useState(null);
+  const [direct2, setDirect2] = useState(null);
   const [directId, setDirectId] = useState(null);
   const [num480, setNum480] = useState(0);
+
+  console.log("direct", direct);
+  console.log("direct2", direct2);
 
   const directFind = useCallback(
     (array) => {
@@ -351,7 +372,6 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
     const resPrev = filmsArray
       .filter((item, index) => {
         if (index === Number(filmIndex) - 1) {
-          console.log(item);
           return item;
         } else if (Number(filmIndex) === 0) {
           return filmsArray[0];
@@ -388,6 +408,12 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
     if (directId) {
       getAxiosDirect(directId[1]).then((response) => {
         setDirect(response);
+
+        if (directId.length > 2) {
+          getAxiosDirect(directId[2]).then((response) => {
+            setDirect2(response);
+          });
+        }
       });
     }
   }, [directId]);
@@ -439,11 +465,17 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
           </Link>
           <CartSlider>
             <Link to={SliderCart("prev")}>
-              <i className="fas fa-arrow-circle-left fa-2x"></i>
+              <i
+                className="fas fa-arrow-circle-left fa-2x"
+                onClick={() => setDirect2(null)}
+              ></i>
             </Link>
 
             <Link to={SliderCart("next")}>
-              <i className="fas fa-arrow-circle-right fa-2x"></i>
+              <i
+                className="fas fa-arrow-circle-right fa-2x"
+                onClick={() => setDirect2(null)}
+              ></i>
             </Link>
           </CartSlider>
         </CartRouting>
@@ -485,10 +517,18 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
               )}
               <div>{film.year}</div>
             </CartYear>
-            <CartPerson r1100={r1100}>
-              <img src={direct.posterUrl} alt="person" />
-              <p>{direct.nameRu}</p>
-              <p>{direct.nameEn}</p>
+            <CartPerson r1100={r1100} r480={r480} two={direct2 ? 1 : 0}>
+              <img src={direct.posterUrl} alt="person" className="imgOne" />
+              {direct2 && (
+                <img src={direct2.posterUrl} alt="person" className="imgTwo" />
+              )}
+              <p>
+                {direct.nameRu}
+                {direct2 && `, ${direct2.nameRu}`}
+              </p>
+              <p>
+                {direct.nameEn} {direct2 && `, ${direct2.nameEn}`}
+              </p>
             </CartPerson>
           </CartInfo>
         </CartFilm>
