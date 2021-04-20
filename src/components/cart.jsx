@@ -351,6 +351,7 @@ const Cart = ({ r1300, r1100, r780, r480 }) => {
     const resPrev = filmsArray
       .filter((item, index) => {
         if (index === Number(filmIndex) - 1) {
+          console.log(item);
           return item;
         } else if (Number(filmIndex) === 0) {
           return filmsArray[0];
