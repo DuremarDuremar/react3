@@ -1,14 +1,17 @@
 import React from "react";
 import cinemaButton from "../images/cinemaButton.png";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const DirectStyle = styled.section``;
+const DirectStyle = styled.section`
+  display: flex;
+  justify-content: center;
+`;
 
 const Cinema = styled.div`
   width: 120px;
   height: 120px;
   cursor: pointer;
-  /* padding-left: ${(props) => !props.r480 && "8vw"}; */
 
   img {
     max-width: 100%;
@@ -18,12 +21,18 @@ const Cinema = styled.div`
     }
   }
 `;
+const Content = styled.div`
+  text-align: center;
+`;
 
 const Direct = () => {
   return (
     <DirectStyle>
       <Cinema>
-        <img src={cinemaButton} alt="img" />
+        <Link to="/">
+          <img src={cinemaButton} alt="img" />
+        </Link>
+        <Content>section in development</Content>
       </Cinema>
     </DirectStyle>
   );

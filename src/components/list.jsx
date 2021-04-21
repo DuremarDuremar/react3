@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import Spinner from "./spinner";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { animateScroll as scroll } from "react-scroll";
@@ -123,7 +124,10 @@ const Up = styled.div`
   }
 `;
 
-const Loading = styled.div``;
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const Infiniti = styled.div`
   width: 100%;
@@ -190,6 +194,9 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
     if (!r480) {
       const newItem = items.filter((item) => item.filmId !== id);
       setItems(newItem);
+      if (newItem.length < 1) {
+        scroll.scrollToTop();
+      }
       setCounterA(counterB);
       setCounterB(counterB + 1);
     }
@@ -250,7 +257,11 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
       </Items>
     );
   } else {
-    return <Loading>Loading...</Loading>;
+    return (
+      <Loading>
+        <Spinner />
+      </Loading>
+    );
   }
 };
 
