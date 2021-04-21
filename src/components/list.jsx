@@ -131,7 +131,7 @@ const Infiniti = styled.div`
   position: absolute;
   bottom: 0;
   background-color: #2f3542;
-  opacity: 0.5;
+  opacity: ${(props) => (props.r1100 ? "0.5" : "0.7")};
   cursor: wait;
   z-index: 2;
 `;
@@ -240,7 +240,13 @@ const List = ({ fest, year, r1100, r780, r480 }) => {
             ></i>
           </Up>
         )}
-        {axios && r480 && <Infiniti onMouseEnter={() => setHasMore(true)} />}
+        {axios && r480 && (
+          <Infiniti
+            r1100={r1100}
+            onMouseOver={() => r1100 && setHasMore(true)}
+            onClick={() => !r1100 && setHasMore(true)}
+          />
+        )}
       </Items>
     );
   } else {
