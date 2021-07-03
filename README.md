@@ -1,7 +1,7 @@
 Путеводитель по международным кинофестивалем с данными из "кинопоиска" <br/>
 https://duremarduremar.github.io/react3/
 
-Выполнен с использованием React Hooks, Redax, styled-components
+Выполнен с использованием React Hooks, Redux, styled-components
 
 <img src="img/dec02.png" width=660 height=330>
 <img src="img/dec01.png" width=660 height=330>
